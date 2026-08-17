@@ -39,12 +39,22 @@ _Avoid_: Customer, client, user, lead
 An inbound expression of interest from a Prospective Parent, captured by the site and stored locally. The site's primary conversion event.
 _Avoid_: Lead, contact request, submission, form fill
 
+**Consent Notice**:
+The standalone notice rendered at the enquiry form, itemising the fields collected, the purpose, and the parent's rights. Distinct from the privacy policy — a link to the policy does not substitute for it. Rendered bilingually in English and Bengali; the language actually shown is recorded with the Enquiry.
+_Avoid_: Privacy notice, disclaimer, terms
+
+**Consent Record**:
+The immutable evidence stored alongside each Enquiry that consent was given — timestamp, notice version, verbatim consent text, and locale. A schema obligation rather than a policy one, because the burden of proving consent falls on the business.
+
 **Google Business Profile**:
 The business's listing on Google — the canonical source of business facts (name, address, phone, hours, categories, reviews).
 _Avoid_: GMB, Google My Business, Google listing (the product was renamed; `v0_GMB` retains the old initialism only as a directory name)
 
 **NAP**:
-The Name, Address, and Phone as published on the Google Business Profile. Canonical, and reproduced identically wherever it appears on the site — inconsistency directly costs local search ranking.
+The Name, Address, and Phone as published on the Google Business Profile. Address and phone are canonical and reproduced identically wherever they appear on the site. Consistency is worth keeping because it is free, not because Google documents it as a ranking factor — the documented local factors are relevance, distance, and prominence, and citation consistency is not among them.
+
+**Display Name**:
+**Perfect Tuition** — the short name used in titles, headings, and JSON-LD `name`. Deliberately not the full Google listing string (`Perfect Tuition ( Coaching Class ) - Home Tutor & Private Tutor`), which packs service keywords into the name in breach of Google Business Profile naming policy and is therefore not worth entrenching sitewide. The full string appears only as `alternateName` and once verbatim in the contact citation block.
 
 **Takeout Export**:
 The Google Takeout dump of the Google Business Profile held at `v0_GMB/`, dated 2026-08-17. A point-in-time snapshot and the seed content for the site, not a live feed. Contains real business data and is git-ignored.
