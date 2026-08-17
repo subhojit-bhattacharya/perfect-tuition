@@ -1,0 +1,27 @@
+# Google Business Profile takeout export — real business data, never commit
+v0_GMB/
+takeout_directory.txt
+
+# Enquiry database — contains parents' names and phone numbers.
+# This repo is PUBLIC. Nothing under here may ever be committed.
+api/data/
+
+# Belt-and-braces: no SQLite file anywhere in the tree, whatever it's called
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Secrets: Telegram bot token, Turnstile secret key, tunnel credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.json.credentials
+.cloudflared/
+
+# Build output / deps
+node_modules/
+dist/
+.astro/
