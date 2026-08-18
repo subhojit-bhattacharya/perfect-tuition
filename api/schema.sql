@@ -28,15 +28,26 @@ CREATE TABLE IF NOT EXISTS enquiry (
   consented_at           TEXT NOT NULL,
 
   turnstile_status       TEXT NOT NULL,            -- verified | unverified | failed
-  notified_at            TEXT,                     -- NULL until Telegram confirms
+  notified_at            TEXT,                     -- set only on Telegram ok:true
+
+  -- Telegram notification state (#7). `notified_at` alone cannot carry this:
+  -- #6 suppresses the second notification for a duplicate inside 10 minutes,
+  -- so a NULL timestamp would mean both "Telegram is broken" and "deliberately
+  -- not sent", and the alert watching it would cry wolf on every duplicate.
+  notification_status    TEXT NOT NULL DEFAULT 'pending',
+                                                   -- pending | sent | suppressed | failed
+  notify_attempts        INTEGER NOT NULL DEFAULT 0,
 
   -- Lifecycle (#8). Deliberately no `last_contact_at`: there is no admin
   -- interface in v1, so nothing would ever write to it, and a retention field
   -- that is never updated makes the policy undemonstrable.
   withdrawn_at           TEXT,                     -- consent withdrawn (s.6(4)-(6))
-  erasure_requested_at   TEXT                      -- stamped on request; execution
+  erasure_requested_at   TEXT,                     -- stamped on request; execution
                                                    -- may be deferred to the Rule 8(3)
                                                    -- one-year floor
+
+  CHECK (notification_status IN ('pending', 'sent', 'suppressed', 'failed')),
+  CHECK (notify_attempts >= 0)
 );
 
 -- No `ip_address` column, deliberately: rate limiting happens at the Cloudflare
@@ -49,6 +60,12 @@ CREATE INDEX IF NOT EXISTS enquiry_created_at_idx
 -- Duplicate suppression (#6) and erasure lookup by phone (#8).
 CREATE INDEX IF NOT EXISTS enquiry_phone_created_idx
   ON enquiry (phone_e164, created_at);
+
+-- The Operator alert scans for notifications that never landed. Only 'pending'
+-- and 'failed' qualify; 'suppressed' is a correct outcome, not a fault (#7).
+CREATE INDEX IF NOT EXISTS enquiry_notification_status_idx
+  ON enquiry (notification_status, created_at)
+  WHERE notification_status IN ('pending', 'failed');
 
 -- Pending erasure requests awaiting the one-year floor.
 CREATE INDEX IF NOT EXISTS enquiry_erasure_requested_idx
