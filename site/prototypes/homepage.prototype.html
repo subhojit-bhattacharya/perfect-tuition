@@ -3,78 +3,86 @@
 <!--
   PROTOTYPE — issue #9. Throwaway. Not shippable code.
 
-  Three variants of the homepage above-the-fold and enquiry flow, switchable via
-  ?variant= on the floating bar. Sub-shape B: there is no site yet, so this is a
-  standalone route rather than an adjustment to an existing page.
+  Revision 2, 2026-08-20. Variant A ("Call first") chosen as the foundation and
+  rebuilt against the Owner's directives:
+    · Home Tutor Matching retired — no mode field anywhere
+    · new board and subject lists, chips filtered by the class chosen
+    · class timings and 10 am–10 pm call timings in the copy
+    · "Jayeeta Ma'am", mentor; the word "neighbourhood" removed
+    · blue / black / yellow / red palette
+    · Consent Notice signed off, Telegram sentence removed, Bengali reworded
+
+  Variants B and C are gone; the choice is made. The "Laptop asleep" toggle
+  stays, because the failure state is still the thing worth judging.
 
   Design plan
-    Colour  ledger vernacular, taken from the Commerce stream this centre actually
-            teaches: ink #16202E, paper #F2F3EE, feint rule #2E4E8F, margin red
-            #C2362B, muted #5C6875. Neutrals biased blue toward the rule, not
-            pure grey.
-    Type    Georgia for display (real personality, present on every Android and
-            iOS device, no webfont to fail behind the CSP); system-ui for body,
-            which on the actual audience's phone is Roboto — so the prototype
-            shows what a parent sees; ui-monospace for figures and labels.
-    Layout  A phone column in a device frame, scrolling inside itself so the
-            sticky call bar behaves exactly as it would on a handset.
+    Colour  the four directed hues, given jobs rather than sprinkled: black is
+            the text, blue is structure and every non-urgent affordance, yellow
+            is the highlighter — used behind words, never as a surface — and red
+            belongs to exactly one thing, the call. Paper is warmed a few degrees
+            toward the yellow so the neutrals read as chosen.
+    Type    Georgia for display (real personality, on every handset, no webfont
+            to fail behind the CSP); system-ui for body, which on the audience's
+            phone is Roboto; ui-monospace for figures and labels.
+    Layout  A phone column scrolling inside its own frame, so the sticky call bar
+            behaves exactly as it would on a handset.
 
-  Every business fact below is from v0_GMB (the Takeout Export, 2026-08-17).
-  The rating is 4.6 across 62 reviews per #3 — never 4.7.
+  Business facts are from v0_GMB (Takeout Export, 2026-08-17) except where the
+  Owner has overridden them on 2026-08-20 — those are marked OWNER OVERRIDE.
 -->
 
 <style>
   :root {
-    --paper:      #F2F3EE;
-    --paper-2:    #FFFFFF;
-    --ink:        #16202E;
-    --ink-2:      #35414F;
-    --muted:      #5C6875;
-    --rule:       #2E4E8F;
-    --margin-red: #C2362B;
-    --faint:      #D9DDD2;
-    --hairline:   rgba(22, 32, 46, 0.14);
-    --ok:         #1F6B4A;
-    --warn-bg:    #FBF0DC;
-    --warn-ink:   #7A5510;
-    --shell:      #E4E6DE;
-    --shadow:     0 1px 2px rgba(22,32,46,.06), 0 8px 28px rgba(22,32,46,.10);
+    --paper:     #FCFBF6;
+    --paper-2:   #FFFFFF;
+    --ink:       #101215;
+    --ink-2:     #3A4048;
+    --muted:     #6A7078;
+    --blue:      #143D96;
+    --blue-soft: #E8EDF9;
+    --yellow:    #F7C51E;
+    --yellow-2:  #FDF3CE;
+    --red:       #D42A1E;
+    --hairline:  rgba(16, 18, 21, 0.13);
+    --ok:        #17714C;
+    --shell:     #EFEDE5;
+    --shadow:    0 1px 2px rgba(16,18,21,.06), 0 10px 30px rgba(16,18,21,.11);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --paper:      #141A22;
-      --paper-2:    #1C242E;
-      --ink:        #ECEFE8;
-      --ink-2:      #C2C9CE;
-      --muted:      #97A2AE;
-      --rule:       #7FA0DC;
-      --margin-red: #F0776A;
-      --faint:      #2B3540;
-      --hairline:   rgba(236, 239, 232, 0.16);
-      --ok:         #6FCB9F;
-      --warn-bg:    #33280F;
-      --warn-ink:   #F2CE85;
-      --shell:      #0D1218;
-      --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.5);
+      --paper:     #121418;
+      --paper-2:   #1A1E24;
+      --ink:       #F2F1EC;
+      --ink-2:     #C6CAD0;
+      --muted:     #969CA5;
+      --blue:      #7FA2EE;
+      --blue-soft: #1B2740;
+      --yellow:    #F7C51E;
+      --yellow-2:  #3A2F0C;
+      --red:       #FF7062;
+      --hairline:  rgba(242, 241, 236, 0.16);
+      --ok:        #63C79C;
+      --shell:     #08090B;
+      --shadow:    0 1px 2px rgba(0,0,0,.5), 0 10px 30px rgba(0,0,0,.6);
     }
   }
 
   :root[data-theme="dark"] {
-    --paper:      #141A22;
-    --paper-2:    #1C242E;
-    --ink:        #ECEFE8;
-    --ink-2:      #C2C9CE;
-    --muted:      #97A2AE;
-    --rule:       #7FA0DC;
-    --margin-red: #F0776A;
-    --faint:      #2B3540;
-    --hairline:   rgba(236, 239, 232, 0.16);
-    --ok:         #6FCB9F;
-    --warn-bg:    #33280F;
-    --warn-ink:   #F2CE85;
-    --shell:      #0D1218;
-    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.5);
+    --paper:     #121418;
+    --paper-2:   #1A1E24;
+    --ink:       #F2F1EC;
+    --ink-2:     #C6CAD0;
+    --muted:     #969CA5;
+    --blue:      #7FA2EE;
+    --blue-soft: #1B2740;
+    --yellow:    #F7C51E;
+    --yellow-2:  #3A2F0C;
+    --red:       #FF7062;
+    --hairline:  rgba(242, 241, 236, 0.16);
+    --ok:        #63C79C;
+    --shell:     #08090B;
+    --shadow:    0 1px 2px rgba(0,0,0,.5), 0 10px 30px rgba(0,0,0,.6);
   }
 
   * { box-sizing: border-box; }
@@ -87,291 +95,191 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ---------- prototype chrome (deliberately not part of the design) ------- */
+  /* ---------- prototype chrome (not part of the design) ------------------- */
 
   .stage {
     min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
     padding: 18px 16px 92px;
   }
-
   .stage-note {
     font: 600 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
-    max-width: 60ch;
+    letter-spacing: .09em; text-transform: uppercase;
+    color: var(--muted); text-align: center; max-width: 62ch;
   }
-
   .device {
-    width: 100%;
-    max-width: 430px;
+    width: 100%; max-width: 430px;
     height: min(820px, 100dvh - 150px);
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     background: var(--paper);
     border: 1px solid var(--hairline);
-    border-radius: 26px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
+    border-radius: 26px; box-shadow: var(--shadow); overflow: hidden;
   }
-
-  .screen {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    position: relative;
-    scroll-behavior: smooth;
-  }
+  .screen { flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
 
   .switcher {
-    position: fixed;
-    left: 50%;
-    bottom: 14px;
-    transform: translateX(-50%);
-    z-index: 999;
-    display: flex;
-    align-items: stretch;
-    gap: 2px;
-    padding: 4px;
-    border-radius: 999px;
-    background: #16202E;
-    box-shadow: 0 6px 24px rgba(0,0,0,.35);
-    max-width: calc(100vw - 24px);
+    position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+    z-index: 999; display: flex; gap: 2px; padding: 4px;
+    border-radius: 999px; background: #101215;
+    box-shadow: 0 6px 24px rgba(0,0,0,.4); max-width: calc(100vw - 24px);
   }
-
-  .switcher button {
-    font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: .04em;
-    color: #F2F3EE;
-    background: transparent;
-    border: 0;
-    border-radius: 999px;
-    padding: 9px 12px;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .switcher button:hover { background: rgba(242,243,238,.14); }
-  .switcher button:focus-visible { outline: 2px solid #7FA0DC; outline-offset: 1px; }
   .switcher .label {
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: #F2F3EE;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex; align-items: center; padding: 0 12px;
+    font: 600 12px/1 ui-monospace, Menlo, monospace; color: #FCFBF6; white-space: nowrap;
   }
-  .switcher .label b { color: #FFCF6B; font-weight: 700; }
-  .switcher .sep { width: 1px; background: rgba(242,243,238,.2); margin: 6px 2px; }
-  .switcher .toggle[aria-pressed="true"] { background: #C2362B; color: #fff; }
+  .switcher button {
+    font: 600 12px/1 ui-monospace, Menlo, monospace;
+    color: #FCFBF6; background: transparent; border: 0; border-radius: 999px;
+    padding: 9px 13px; cursor: pointer; white-space: nowrap;
+  }
+  .switcher button:hover { background: rgba(252,251,246,.15); }
+  .switcher button:focus-visible { outline: 2px solid var(--yellow); outline-offset: 1px; }
+  .switcher button[aria-pressed="true"] { background: #D42A1E; color: #fff; }
 
-  /* ---------- shared page atoms ------------------------------------------- */
-
-  .pad { padding: 0 20px; }
+  /* ---------- page ------------------------------------------------------- */
 
   h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; text-wrap: balance; margin: 0; }
-  h1 { font-size: 30px; line-height: 1.12; letter-spacing: -.015em; }
+  h1 { font-size: 30px; line-height: 1.13; letter-spacing: -.015em; }
   h2 { font-size: 20px; line-height: 1.2; }
   h3 { font-size: 15px; line-height: 1.3; }
   p  { margin: 0; line-height: 1.55; }
+  a  { color: var(--blue); }
 
   .eyebrow {
-    font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-    letter-spacing: .13em;
-    text-transform: uppercase;
-    color: var(--rule);
+    font: 700 11px/1 ui-monospace, Menlo, monospace;
+    letter-spacing: .13em; text-transform: uppercase; color: var(--blue);
   }
   .small { font-size: 13px; color: var(--muted); line-height: 1.5; }
   .num { font-variant-numeric: tabular-nums; }
 
+  /* yellow is a highlighter, never a surface */
+  .hl {
+    background: linear-gradient(transparent 62%, var(--yellow) 62%, var(--yellow) 94%, transparent 94%);
+    padding: 0 1px;
+  }
+
   .masthead {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--hairline);
-    background: var(--paper);
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding: 14px 20px; background: var(--ink); color: var(--paper);
   }
   .wordmark { font-family: Georgia, serif; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
-  .wordmark span { color: var(--margin-red); }
+  .wordmark span { color: var(--yellow); }
+  .masthead .since { font: 600 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; opacity: .75; }
 
-  /* the trust facts, rendered as a ledger line */
+  .hero { padding: 24px 20px 22px; display: flex; flex-direction: column; gap: 16px; }
+
   .ledger {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
     background: var(--paper-2);
   }
-  .ledger div {
-    padding: 11px 8px;
-    text-align: center;
-    border-left: 1px solid var(--hairline);
-  }
+  .ledger div { padding: 11px 8px; text-align: center; border-left: 1px solid var(--hairline); }
   .ledger div:first-child { border-left: 0; }
   .ledger .k { display: block; font: 700 18px/1.1 Georgia, serif; font-variant-numeric: tabular-nums; }
-  .ledger .v { display: block; margin-top: 3px; font: 600 10px/1.3 ui-monospace, Menlo, monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .ledger .v { display: block; margin-top: 3px; font: 600 10px/1.3 ui-monospace, Menlo, monospace;
+               letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
 
   .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    width: 100%;
-    padding: 15px 16px;
-    border: 0;
-    border-radius: 12px;
-    font: 700 16px/1 system-ui, sans-serif;
-    text-decoration: none;
-    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    width: 100%; padding: 15px 16px; border: 0; border-radius: 12px;
+    font: 700 16px/1 system-ui, sans-serif; text-decoration: none; cursor: pointer;
   }
-  .btn-call { background: var(--margin-red); color: #fff; }
-  .btn-wa   { background: transparent; color: var(--ink); border: 1.5px solid var(--hairline); }
+  .btn-call { background: var(--red); color: #fff; }
+  .btn-wa   { background: transparent; color: var(--ink); border: 1.5px solid var(--blue); }
   .btn-wa .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
-  .btn:focus-visible { outline: 3px solid var(--rule); outline-offset: 2px; }
-  .btn-sub { display: block; font: 500 12px/1 system-ui; opacity: .85; margin-top: 5px; }
+  .btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .btn-sub { display: block; font: 500 12px/1 system-ui; opacity: .9; margin-top: 5px; }
 
   .stack { display: flex; flex-direction: column; gap: 10px; }
   .section { padding: 26px 20px; border-top: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 14px; }
 
-  .qual {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    background: var(--paper-2);
-    border: 1px solid var(--hairline);
-    border-left: 4px solid var(--rule);
+  .band {
+    display: flex; flex-direction: column; gap: 5px;
+    padding: 14px 16px; border-radius: 12px;
+    background: var(--paper-2); border: 1px solid var(--hairline);
+    border-left: 4px solid var(--blue);
   }
-  .qual.red { border-left-color: var(--margin-red); }
-  .qual h3 { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
-  .qual .cls { font: 700 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; color: var(--muted); }
+  .band.senior { border-left-color: var(--red); }
+  .band h3 { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .band .cls { font: 700 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; color: var(--muted); }
+  .boards { font: 600 11px/1.4 ui-monospace, Menlo, monospace; letter-spacing: .05em; color: var(--blue); }
 
-  .rating a { color: inherit; }
-  .stars { letter-spacing: .12em; color: var(--margin-red); font-size: 15px; }
+  /* timetable — a real table, because it is one */
+  .timetable { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .timetable th, .timetable td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--hairline); }
+  .timetable th { font: 700 10.5px/1 ui-monospace, Menlo, monospace; letter-spacing: .09em;
+                  text-transform: uppercase; color: var(--muted); }
+  .timetable td:last-child { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  .timetable tr:last-child td { border-bottom: 0; }
 
-  .mapbox {
-    border: 1px solid var(--hairline);
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--paper-2);
-  }
+  .rating { display: flex; align-items: baseline; gap: 11px; }
+  .rating .big { font: 700 40px/1 Georgia, serif; font-variant-numeric: tabular-nums; }
+  .stars { letter-spacing: .12em; color: var(--yellow); font-size: 15px; -webkit-text-stroke: .4px var(--ink-2); }
+
+  .mapbox { border: 1px solid var(--hairline); border-radius: 12px; overflow: hidden; background: var(--paper-2); margin: 0; }
   .mapbox svg { display: block; width: 100%; height: auto; }
-  .mapbox figcaption {
-    padding: 9px 12px;
-    border-top: 1px solid var(--hairline);
-    font: 500 12px/1.45 system-ui;
-    color: var(--muted);
-  }
+  .mapbox figcaption { padding: 9px 12px; border-top: 1px solid var(--hairline);
+                       font: 500 12px/1.45 system-ui; color: var(--muted); }
 
-  /* sticky call bar — the affordance under judgement */
   .stickybar {
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    position: sticky; bottom: 0; z-index: 20;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     padding: 9px 12px calc(9px + env(safe-area-inset-bottom));
     background: color-mix(in srgb, var(--paper) 92%, transparent);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--hairline);
+    backdrop-filter: blur(10px); border-top: 2px solid var(--yellow);
   }
   .stickybar .btn { padding: 13px 10px; font-size: 15px; border-radius: 10px; }
 
-  /* ---------- form -------------------------------------------------------- */
+  /* ---------- form ------------------------------------------------------- */
 
   form { display: flex; flex-direction: column; gap: 14px; }
   label { display: flex; flex-direction: column; gap: 6px; font: 600 13px/1.3 system-ui; }
   input, textarea, select {
-    font: 400 16px/1.4 system-ui;
-    color: var(--ink);
-    background: var(--paper-2);
-    border: 1.5px solid var(--hairline);
-    border-radius: 9px;
-    padding: 11px 12px;
-    width: 100%;
+    font: 400 16px/1.4 system-ui; color: var(--ink); background: var(--paper-2);
+    border: 1.5px solid var(--hairline); border-radius: 9px; padding: 11px 12px; width: 100%;
   }
-  input:focus, textarea:focus, select:focus { outline: 2px solid var(--rule); outline-offset: 1px; border-color: var(--rule); }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--blue); outline-offset: 1px; border-color: var(--blue); }
   textarea { resize: vertical; min-height: 74px; }
   .hint { font: 400 12px/1.45 system-ui; color: var(--muted); }
 
   .chips { display: flex; flex-wrap: wrap; gap: 7px; }
   .chip {
-    font: 600 13px/1 system-ui;
-    padding: 9px 12px;
-    border-radius: 999px;
-    border: 1.5px solid var(--hairline);
-    background: var(--paper-2);
-    color: var(--ink-2);
-    cursor: pointer;
+    font: 600 13px/1 system-ui; padding: 9px 12px; border-radius: 999px;
+    border: 1.5px solid var(--hairline); background: var(--paper-2); color: var(--ink-2); cursor: pointer;
   }
-  .chip[aria-pressed="true"] { background: var(--rule); border-color: var(--rule); color: #fff; }
-
-  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .mode {
-    text-align: left;
-    padding: 11px 12px;
-    border-radius: 10px;
-    border: 1.5px solid var(--hairline);
-    background: var(--paper-2);
-    cursor: pointer;
-    font: 600 13px/1.25 system-ui;
-    color: var(--ink);
-  }
-  .mode small { display: block; font: 400 11px/1.35 system-ui; color: var(--muted); margin-top: 3px; }
-  .mode[aria-pressed="true"] { border-color: var(--rule); box-shadow: inset 0 0 0 1px var(--rule); }
+  .chip[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .chips-empty { font: 400 13px/1.5 system-ui; color: var(--muted); padding: 4px 0; }
 
   .consent {
-    border: 1px solid var(--hairline);
-    border-left: 4px solid var(--margin-red);
-    border-radius: 10px;
-    background: var(--paper-2);
-    padding: 13px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    border: 1px solid var(--hairline); border-left: 4px solid var(--red);
+    border-radius: 10px; background: var(--paper-2); padding: 13px 14px;
+    display: flex; flex-direction: column; gap: 8px;
   }
   .consent .head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .consent h3 { font-size: 14px; }
-  .consent p { font-size: 12.5px; line-height: 1.55; color: var(--ink-2); }
-  .consent .langs { display: flex; gap: 3px; padding: 2px; background: var(--faint); border-radius: 999px; }
+  .consent p { font-size: 12.5px; line-height: 1.6; color: var(--ink-2); }
+  .consent .langs { display: flex; gap: 3px; padding: 2px; background: var(--blue-soft); border-radius: 999px; }
   .consent .langs button {
-    font: 700 11px/1 ui-monospace, Menlo, monospace;
-    border: 0; background: transparent; color: var(--muted);
-    padding: 6px 9px; border-radius: 999px; cursor: pointer;
+    font: 700 11px/1 ui-monospace, Menlo, monospace; border: 0; background: transparent;
+    color: var(--muted); padding: 6px 9px; border-radius: 999px; cursor: pointer;
   }
   .consent .langs button[aria-pressed="true"] { background: var(--paper-2); color: var(--ink); }
   .agree { flex-direction: row; align-items: flex-start; gap: 10px; font-weight: 500; font-size: 13px; line-height: 1.45; }
-  .agree input { width: 21px; height: 21px; flex: none; margin-top: 1px; accent-color: var(--margin-red); }
+  .agree input { width: 21px; height: 21px; flex: none; margin-top: 1px; accent-color: var(--red); }
 
-  /* ---------- result states ----------------------------------------------- */
+  /* ---------- outcomes --------------------------------------------------- */
 
   .result { border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-  .result.ok { background: var(--paper-2); border: 1px solid var(--ok); }
-  .result.fail { background: var(--warn-bg); color: var(--warn-ink); border: 1px solid color-mix(in srgb, var(--warn-ink) 40%, transparent); }
+  .result.ok   { background: var(--paper-2); border: 1px solid var(--ok); }
+  .result.fail { background: var(--yellow-2); border: 1px solid var(--yellow); }
   .result h3 { font-size: 17px; }
-  .result p { font-size: 13.5px; }
-  .result .btn-call { background: var(--ok); }
+  .result p  { font-size: 13.5px; }
+  .result.ok .btn-call { background: var(--ok); }
   .sending { display: flex; align-items: center; gap: 9px; font: 600 14px system-ui; color: var(--muted); padding: 6px 0; }
-  .spinner {
-    width: 15px; height: 15px; border-radius: 50%;
-    border: 2px solid var(--hairline); border-top-color: var(--rule);
-    animation: spin .7s linear infinite;
-  }
+  .spinner { width: 15px; height: 15px; border-radius: 50%;
+             border: 2px solid var(--hairline); border-top-color: var(--blue); animation: spin .7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) {
-    .spinner { animation: none; }
-    .screen { scroll-behavior: auto; }
-  }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } .screen { scroll-behavior: auto; } }
 
   .footnote { padding: 20px; border-top: 1px solid var(--hairline); }
 
@@ -383,144 +291,217 @@
 </style>
 
 <div class="stage">
-  <p class="stage-note">Prototype for issue #9 · not shippable · business facts from the Takeout Export</p>
+  <p class="stage-note">Prototype for issue #9 · revision 2 · Variant A rebuilt to the Owner's 2026-08-20 directives</p>
   <div class="device">
     <div class="screen" id="screen"></div>
   </div>
 </div>
 
 <nav class="switcher" aria-label="Prototype controls">
-  <button type="button" id="prev" aria-label="Previous variant">←</button>
-  <span class="label" id="label"></span>
-  <button type="button" id="next" aria-label="Next variant">→</button>
-  <span class="sep"></span>
-  <button type="button" class="toggle" id="asleep" aria-pressed="false">Laptop asleep</button>
+  <span class="label">Homepage — Call first</span>
+  <button type="button" id="asleep" aria-pressed="false">Laptop asleep</button>
 </nav>
 
 <script>
 (() => {
   "use strict";
 
-  // ---- real business facts, from v0_GMB (Takeout Export, 2026-08-17) -------
   const BIZ = {
-    name: "Perfect Tuition",
     since: 2012,
     phoneDisplay: "062911 65454",
     phoneE164: "+916291165454",
     addr1: "Arnab Apartment, 444 Dum Dum Park Road",
     addr2: "Dum Dum Park, Kolkata 700055",
-    hours: "8 am – 10 pm, every day",
-    rating: "4.6",
-    reviews: 62,
-    ratingAsOf: "17 Aug 2026",
+    callHours: "10 am to 10 pm",               // OWNER OVERRIDE 2026-08-20
+    rating: "4.7",                             // OWNER OVERRIDE 2026-08-20
+    ratingAsOf: "20 Aug 2026",
     fee: "From ₹500 per subject",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=22.6080092,88.4149812",
-    juniorSubjects: ["English", "Mathematics", "Science", "History", "Geography", "Bengali"],
-    seniorSubjects: ["Accounts", "Business Studies", "Economics"]
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=22.6080092,88.4149812"
   };
 
+  // Class bands. A class 9 or 10 student may take either senior group, so the
+  // chips are filtered by the class chosen rather than dumped in one long list.
+  const BANDS = {
+    junior: {
+      label: "Classes 3 – 8",
+      tag: "Junior",
+      boards: "ICSE · CBSE · KV · WB",
+      note: "English-medium and convent schools.",
+      classes: [3, 4, 5, 6, 7, 8],
+      subjects: ["English Literature", "English Language", "Bengali", "Hindi", "Social Science",
+                 "History/Civics", "Geography (incl. Topo Sheet)", "Maths",
+                 "Science (Physics, Chemistry, Biology)"]
+    },
+    humanities: {
+      label: "Classes 9 – 10",
+      tag: "Humanities",
+      boards: "ICSE · CBSE",
+      note: "",
+      classes: [9, 10],
+      subjects: ["English Literature", "English Language", "History", "Civics",
+                 "Geography", "Social Science", "Political Science"]
+    },
+    commerce: {
+      label: "Classes 9 – 12",
+      tag: "Commerce",
+      boards: "ICSE · CBSE",
+      note: "",
+      classes: [9, 10, 11, 12],
+      subjects: ["Commerce", "Economic Application", "Economics", "Accountancy",
+                 "Business Studies", "Entrepreneurship"]
+    }
+  };
+
+  const TIMETABLE = [
+    ["Morning", "7 – 9 am"],
+    ["Evening batch 1", "5 – 7 pm"],
+    ["Evening batch 2", "7 – 9 pm"]
+  ];
+
   const tel = `tel:${BIZ.phoneE164}`;
-  const wa  = (msg) => `https://wa.me/${BIZ.phoneE164.replace("+","")}?text=${encodeURIComponent(msg)}`;
+  const wa  = (msg) => `https://wa.me/${BIZ.phoneE164.replace("+", "")}?text=${encodeURIComponent(msg)}`;
   const waGeneral = wa("Hello, I would like to ask about tuition for my child.");
 
-  // ---- shared atoms (a header is fine to share; a layout is not) ----------
-
-  const masthead = () => `
-    <header class="masthead">
-      <span class="wordmark">Perfect<span>.</span> Tuition</span>
-      <span class="small num">Since ${BIZ.since}</span>
-    </header>`;
-
-  const ledger = () => `
-    <div class="ledger">
-      <div><span class="k num">${BIZ.rating}</span><span class="v">Google rating</span></div>
-      <div><span class="k num">${new Date().getFullYear() - BIZ.since}</span><span class="v">Years teaching</span></div>
-      <div><span class="k">3–12</span><span class="v">Classes</span></div>
-    </div>`;
-
-  const ratingLine = () => `
-    <p class="small rating">
-      <span class="stars">★★★★★</span>
-      Rated <strong class="num">${BIZ.rating} / 5</strong> across
-      <strong class="num">${BIZ.reviews}</strong> Google reviews
-      <a href="${BIZ.mapsUrl}" target="_blank" rel="noopener">(read them on Google)</a>.
-      <br>As of ${BIZ.ratingAsOf}.
-    </p>`;
-
-  const callButtons = (sub = true) => `
-    <div class="stack">
-      <a class="btn btn-call" href="${tel}">
-        <span>Call ${BIZ.phoneDisplay}${sub ? `<span class="btn-sub">${BIZ.hours}</span>` : ""}</span>
-      </a>
-      <a class="btn btn-wa" href="${waGeneral}" target="_blank" rel="noopener">
-        <span class="dot"></span> Message on WhatsApp
-      </a>
-    </div>`;
-
-  const stickybar = () => `
-    <div class="stickybar">
-      <a class="btn btn-call" href="${tel}">Call now</a>
-      <a class="btn btn-wa" href="${waGeneral}" target="_blank" rel="noopener"><span class="dot"></span> WhatsApp</a>
-    </div>`;
-
-  const qualifiers = () => `
-    <div class="qual">
-      <h3>Classes 3 – 8 <span class="cls">Junior</span></h3>
-      <p class="small">All subjects — ${BIZ.juniorSubjects.join(", ")}.</p>
-    </div>
-    <div class="qual red">
-      <h3>Classes 9 – 12 <span class="cls">Senior</span></h3>
-      <p class="small"><strong>Commerce stream only</strong> — ${BIZ.seniorSubjects.join(", ")}.
-      We do not teach Science or Arts at this level.</p>
-    </div>`;
-
-  const mapbox = () => `
-    <figure class="mapbox" style="margin:0">
-      <svg viewBox="0 0 400 168" role="img" aria-label="Sketch map of Dum Dum Park showing the centre's location">
-        <rect width="400" height="168" fill="var(--paper-2)"/>
-        <g stroke="var(--faint)" stroke-width="9" fill="none">
-          <path d="M-10 44 H410"/><path d="M-10 118 H410"/>
-          <path d="M96 -10 V178"/><path d="M268 -10 V178"/>
-        </g>
-        <path d="M-10 80 H410" stroke="var(--rule)" stroke-width="3" opacity=".45" fill="none"/>
-        <circle cx="182" cy="80" r="19" fill="var(--margin-red)" opacity=".14"/>
-        <circle cx="182" cy="80" r="7" fill="var(--margin-red)"/>
-        <text x="196" y="72" font-family="Georgia, serif" font-size="13" fill="var(--ink)">Dum Dum Park</text>
-        <text x="196" y="90" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="var(--muted)">444, Dum Dum Park Road</text>
-      </svg>
-      <figcaption><strong>Placeholder.</strong> Ships as a committed OpenStreetMap image with attribution — the Google Maps iframe was rejected in #10 as a third-party tracker.</figcaption>
-    </figure>`;
-
-  const addressBlock = () => `
-    <div>
-      <p class="eyebrow" style="margin-bottom:7px">Where we are</p>
-      <p>${BIZ.addr1}<br>${BIZ.addr2}</p>
-      <p class="small" style="margin-top:6px">Open ${BIZ.hours}. ${BIZ.fee}.</p>
-    </div>`;
-
-  // ---- the consent notice, standalone at the form (Rule 3(a)) -------------
-
+  // Consent Notice — signed off by the Owner 2026-08-20. No Telegram sentence;
+  // no mode clause, because there is no mode. Bengali reworded per her direction.
   const CONSENT = {
     en: `We collect: your name, your phone number, the class and subjects you're asking about,
-         whether you want coaching at our centre or a tutor at home, and anything you write in
-         the message box. We use it for one purpose only: to contact you about tuition for your
-         child at Perfect Tuition. We use it for no other purpose, and we do not share your
-         details with anyone else. To let us know your enquiry has arrived, it is sent to the
-         owner's phone through Telegram. Please do not include your child's name, school, or
-         address. We keep this information for 24 months, then delete it. The law requires us to
-         keep records for at least one year, so if you ask us to delete yours sooner, we will
-         delete it as soon as that year is up.`,
+         and anything you write in the message box. We use it for one purpose only: to contact
+         you about tuition for your child at Perfect Tuition. We use it for no other purpose,
+         and we do not share your details with anyone else. Please do not include your child's
+         name, school, or address. We keep this information for 24 months, then delete it. The
+         law requires us to keep records for at least one year, so if you ask us to delete yours
+         sooner, we will delete it as soon as that year is up.`,
     bn: `আমরা যা সংগ্রহ করি: আপনার নাম, আপনার ফোন নম্বর, আপনি যে শ্রেণি ও বিষয় সম্পর্কে জানতে চাইছেন,
-         আপনি আমাদের সেন্টারে কোচিং চান নাকি বাড়িতে গৃহশিক্ষক চান, এবং বার্তার ঘরে আপনি যা লেখেন।
-         আমরা এটি কেবল একটি কাজেই ব্যবহার করি: আপনার সন্তানের পড়াশোনার বিষয়ে আপনার সঙ্গে যোগাযোগ করতে।
-         অনুগ্রহ করে আপনার সন্তানের নাম, স্কুল বা ঠিকানা লিখবেন না। আমরা এই তথ্য ২৪ মাস রাখি, তারপর মুছে ফেলি।`
+         এবং বার্তার ঘরে আপনি যা লেখেন। আমরা এটি একটি কাজেই ব্যবহার করি: আপনার সন্তানের পড়াশোনার
+         বিষয়ে আপনার সঙ্গে যোগাযোগ করতে। অন্য কোনো কাজে আমরা এটি ব্যবহার করি না, এবং অন্য কারও
+         সঙ্গে আপনার তথ্য ভাগ করি না। অনুগ্রহ করে আপনার সন্তানের নাম, স্কুল বা ঠিকানা লিখবেন না।
+         আমরা এই তথ্য ২৪ মাস রাখি, তারপর মুছে ফেলি। আইন অনুযায়ী আমাদের অন্তত এক বছর নথি রাখতে হয়,
+         তাই তার আগে আপনি মুছে ফেলতে বললে, সেই এক বছর পূর্ণ হওয়ামাত্র আমরা তা মুছে ফেলব।`
   };
   const AGREE = {
     en: "I am the parent or guardian, I am over 18, and I agree to the above.",
     bn: "আমি অভিভাবক, আমার বয়স ১৮ বছরের বেশি, এবং আমি উপরের বিষয়ে সম্মত।"
   };
+  const CONSENT_TITLE = { en: "Before you send this", bn: "পাঠানোর আগে পড়ে নিন" };
 
-  const enquiryForm = () => `
+  const bandFor = (cls) => {
+    const n = Number(cls);
+    if (!n) return [];
+    return Object.values(BANDS).filter(b => b.classes.includes(n));
+  };
+
+  const page = () => `
+    <header class="masthead">
+      <span class="wordmark">Perfect<span>.</span> Tuition</span>
+      <span class="since num">Since ${BIZ.since}</span>
+    </header>
+
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Dum Dum Park, Kolkata</p>
+        <h1 style="margin-top:9px">Small-batch coaching for <span class="hl">classes 3 to 12</span>.</h1>
+        <p class="small" style="margin-top:10px;font-size:14px">
+          Fourteen years at the same address. Speak to <strong>Jayeeta Ma'am</strong> —
+          the mentor who runs every batch here.
+        </p>
+      </div>
+      <div class="stack">
+        <a class="btn btn-call" href="${tel}">
+          <span>Call ${BIZ.phoneDisplay}<span class="btn-sub">Calls answered ${BIZ.callHours}</span></span>
+        </a>
+        <a class="btn btn-wa" href="${waGeneral}" target="_blank" rel="noopener">
+          <span class="dot"></span> Message on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <div class="ledger">
+      <div><span class="k num">${BIZ.rating}</span><span class="v">Google rating</span></div>
+      <div><span class="k num">${new Date().getFullYear() - BIZ.since}</span><span class="v">Years teaching</span></div>
+      <div><span class="k">3–12</span><span class="v">Classes</span></div>
+    </div>
+
+    <div class="section">
+      <div class="rating">
+        <span class="big num">${BIZ.rating}</span>
+        <div>
+          <div class="stars">★★★★★</div>
+          <div class="small" style="margin-top:3px">
+            on Google · <a href="${BIZ.mapsUrl}" target="_blank" rel="noopener">read the reviews</a>
+          </div>
+        </div>
+      </div>
+      <p class="small">As of ${BIZ.ratingAsOf}.</p>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">Who we teach</p>
+      <div class="band">
+        <h3>${BANDS.junior.label} <span class="cls">${BANDS.junior.tag}</span></h3>
+        <p class="boards">${BANDS.junior.boards}</p>
+        <p class="small">${BANDS.junior.note} ${BANDS.junior.subjects.join(", ")}.</p>
+      </div>
+      <div class="band senior">
+        <h3>${BANDS.humanities.label} <span class="cls">${BANDS.humanities.tag}</span></h3>
+        <p class="boards">${BANDS.humanities.boards}</p>
+        <p class="small">${BANDS.humanities.subjects.join(", ")}.</p>
+      </div>
+      <div class="band senior">
+        <h3>${BANDS.commerce.label} <span class="cls">${BANDS.commerce.tag}</span></h3>
+        <p class="boards">${BANDS.commerce.boards}</p>
+        <p class="small">${BANDS.commerce.subjects.join(", ")}.</p>
+      </div>
+      <p class="small">${BIZ.fee}.</p>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">When batches run</p>
+      <table class="timetable">
+        <thead><tr><th scope="col">Batch</th><th scope="col">Timing</th></tr></thead>
+        <tbody>
+          ${TIMETABLE.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("")}
+        </tbody>
+      </table>
+      <p class="small"><strong>Monday to Friday.</strong> Calls answered ${BIZ.callHours}, every day.</p>
+    </div>
+
+    <div class="section">
+      <div>
+        <p class="eyebrow" style="margin-bottom:7px">Where we are</p>
+        <p>${BIZ.addr1}<br>${BIZ.addr2}</p>
+      </div>
+      <figure class="mapbox">
+        <svg viewBox="0 0 400 168" role="img" aria-label="Sketch map of Dum Dum Park showing the centre's location">
+          <rect width="400" height="168" fill="var(--paper-2)"/>
+          <g stroke="var(--hairline)" stroke-width="9" fill="none">
+            <path d="M-10 44 H410"/><path d="M-10 118 H410"/>
+            <path d="M96 -10 V178"/><path d="M268 -10 V178"/>
+          </g>
+          <path d="M-10 80 H410" stroke="var(--blue)" stroke-width="3" opacity=".4" fill="none"/>
+          <circle cx="182" cy="80" r="19" fill="var(--red)" opacity=".15"/>
+          <circle cx="182" cy="80" r="7" fill="var(--red)"/>
+          <text x="196" y="72" font-family="Georgia, serif" font-size="13" fill="var(--ink)">Dum Dum Park</text>
+          <text x="196" y="90" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="var(--muted)">444, Dum Dum Park Road</text>
+        </svg>
+        <figcaption><strong>Placeholder.</strong> Ships as a committed OpenStreetMap image with attribution — the Google Maps iframe was rejected in #10 as a third-party tracker.</figcaption>
+      </figure>
+    </div>
+
+    <div class="section">
+      <h2>Rather we called you?</h2>
+      <p class="small">Leave your number and Jayeeta Ma'am will ring back the same day.</p>
+      ${form()}
+    </div>
+
+    <div class="footnote small">${BIZ.addr1}, ${BIZ.addr2} · ${BIZ.phoneDisplay} · Calls ${BIZ.callHours}</div>
+
+    <div class="stickybar">
+      <a class="btn btn-call" href="${tel}">Call now</a>
+      <a class="btn btn-wa" href="${waGeneral}" target="_blank" rel="noopener"><span class="dot"></span> WhatsApp</a>
+    </div>`;
+
+  const form = () => `
     <form id="enquiry" novalidate>
       <label>Your name
         <input name="parent_name" autocomplete="name" placeholder="e.g. Ananya Das">
@@ -530,28 +511,15 @@
         <span class="hint">We call back on this number. Nothing else.</span>
       </label>
       <label>Which class?
-        <select name="class_level">
+        <select name="class_level" id="class_level">
           <option value="">Select a class</option>
-          ${Array.from({length: 10}, (_, i) => i + 3).map(c => `<option value="${c}">Class ${c}</option>`).join("")}
+          ${Array.from({ length: 10 }, (_, i) => i + 3)
+            .map(c => `<option value="${c}">Class ${c}</option>`).join("")}
         </select>
       </label>
       <div>
         <p style="font:600 13px/1.3 system-ui;margin-bottom:7px">Subjects</p>
-        <div class="chips" id="subjects">
-          ${[...BIZ.juniorSubjects, ...BIZ.seniorSubjects]
-            .map(s => `<button type="button" class="chip" aria-pressed="false">${s}</button>`).join("")}
-        </div>
-      </div>
-      <div>
-        <p style="font:600 13px/1.3 system-ui;margin-bottom:7px">Where should the teaching happen?</p>
-        <div class="modes" id="modes">
-          <button type="button" class="mode" data-mode="coaching_centre" aria-pressed="true">
-            At your centre<small>Dum Dum Park</small>
-          </button>
-          <button type="button" class="mode" data-mode="home_tutor" aria-pressed="false">
-            A tutor at home<small>Across Kolkata</small>
-          </button>
-        </div>
+        <div class="chips" id="subjects"></div>
       </div>
       <label>Anything else? <span style="font-weight:400;color:var(--muted)">(optional)</span>
         <textarea name="message" placeholder="Timings you'd prefer, questions you have…"></textarea>
@@ -560,7 +528,7 @@
 
       <section class="consent" aria-labelledby="consent-h">
         <div class="head">
-          <h3 id="consent-h" data-consent-title>Before you send this</h3>
+          <h3 id="consent-h" data-consent-title>${CONSENT_TITLE.en}</h3>
           <div class="langs" role="group" aria-label="Notice language">
             <button type="button" data-lang="en" aria-pressed="true">EN</button>
             <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
@@ -578,174 +546,51 @@
       <div id="outcome" hidden></div>
     </form>`;
 
-  // ---- the three variants -------------------------------------------------
-
-  const VARIANTS = {
-    A: {
-      name: "Call first",
-      render: () => `
-        ${masthead()}
-        <div class="pad" style="padding-top:26px;display:flex;flex-direction:column;gap:16px">
-          <div>
-            <p class="eyebrow">Dum Dum Park · CBSE &amp; ICSE</p>
-            <h1 style="margin-top:9px">Small-batch coaching for classes 3 to 12.</h1>
-            <p class="small" style="margin-top:9px;font-size:14px">
-              Fourteen years in the same neighbourhood. Talk to Jayeeta directly — she teaches here.
-            </p>
-          </div>
-          ${callButtons()}
-        </div>
-        ${ledger()}
-        <div class="section">${ratingLine()}${addressBlock()}</div>
-        <div class="section">
-          <p class="eyebrow">Who we teach</p>
-          ${qualifiers()}
-        </div>
-        <div class="section">${mapbox()}</div>
-        <div class="section">
-          <h2>Rather we called you?</h2>
-          <p class="small">Leave your number and we'll ring back the same day.</p>
-          ${enquiryForm()}
-        </div>
-        <div class="footnote small">${BIZ.addr1}, ${BIZ.addr2} · ${BIZ.phoneDisplay}</div>
-        ${stickybar()}`
-    },
-
-    B: {
-      name: "Qualify first",
-      render: () => `
-        ${masthead()}
-        <div class="pad" style="padding-top:24px;display:flex;flex-direction:column;gap:14px">
-          <h1>Which class is your child in?</h1>
-          <p class="small" style="font-size:14px">
-            It changes what we can offer. We'd rather tell you now than waste your evening.
-          </p>
-          ${qualifiers()}
-          <p class="small">
-            Coaching at our centre in Dum Dum Park, or a tutor at your home anywhere in Kolkata.
-            ${BIZ.fee}.
-          </p>
-        </div>
-        ${ledger()}
-        <div class="section">
-          <h2>Ask us about a place</h2>
-          ${enquiryForm()}
-        </div>
-        <div class="section">${ratingLine()}</div>
-        <div class="section">${addressBlock()}${mapbox()}</div>
-        <div class="footnote small">${BIZ.addr1}, ${BIZ.addr2} · ${BIZ.phoneDisplay}</div>
-        ${stickybar()}`
-    },
-
-    C: {
-      name: "Proof first",
-      render: () => `
-        ${masthead()}
-        <div class="pad" style="padding-top:22px;display:flex;flex-direction:column;gap:13px">
-          <div style="display:flex;align-items:baseline;gap:11px">
-            <span style="font:700 46px/1 Georgia,serif;font-variant-numeric:tabular-nums">${BIZ.rating}</span>
-            <div>
-              <div class="stars">★★★★★</div>
-              <div class="small num" style="margin-top:2px">${BIZ.reviews} Google reviews</div>
-            </div>
-          </div>
-          <h1>Teaching the same streets in Dum Dum Park since ${BIZ.since}.</h1>
-          <p class="small" style="font-size:14px">
-            CBSE and ICSE, classes 3 to 12, in small batches. ${BIZ.fee}.
-            <a href="${BIZ.mapsUrl}" target="_blank" rel="noopener">Read the reviews on Google</a> — as of ${BIZ.ratingAsOf}.
-          </p>
-          ${mapbox()}
-          ${callButtons(false)}
-        </div>
-        <div class="section">
-          <p class="eyebrow">Who we teach</p>
-          ${qualifiers()}
-        </div>
-        <div class="section">${addressBlock()}</div>
-        <div class="section">
-          <h2>Send an enquiry instead</h2>
-          ${enquiryForm()}
-        </div>
-        <div class="footnote small">${BIZ.addr1}, ${BIZ.addr2} · ${BIZ.phoneDisplay}</div>
-        ${stickybar()}`
-    }
-  };
-
-  const KEYS = Object.keys(VARIANTS);
-
   // ---- wiring -------------------------------------------------------------
 
   const screen = document.getElementById("screen");
-  const label  = document.getElementById("label");
   const asleep = document.getElementById("asleep");
-
-  const readVariant = () => {
-    const v = (new URLSearchParams(location.search).get("variant") || "A").toUpperCase();
-    return KEYS.includes(v) ? v : "A";
-  };
-
-  let current = readVariant();
-
-  function paint() {
-    screen.innerHTML = VARIANTS[current].render();
-    screen.scrollTop = 0;
-    label.innerHTML = `<b>${current}</b>&nbsp;— ${VARIANTS[current].name}`;
-    wireForm();
-  }
-
-  function go(step) {
-    const i = (KEYS.indexOf(current) + step + KEYS.length) % KEYS.length;
-    current = KEYS[i];
-    try {
-      const u = new URL(location.href);
-      u.searchParams.set("variant", current);
-      history.replaceState(null, "", u);
-    } catch (_) { /* sandboxed — variant still switches, just not shareable */ }
-    paint();
-  }
-
-  document.getElementById("prev").addEventListener("click", () => go(-1));
-  document.getElementById("next").addEventListener("click", () => go(1));
 
   asleep.addEventListener("click", () => {
     asleep.setAttribute("aria-pressed", asleep.getAttribute("aria-pressed") === "true" ? "false" : "true");
   });
 
-  document.addEventListener("keydown", (e) => {
-    const t = e.target;
-    if (t && (t.matches("input, textarea, select") || t.isContentEditable)) return;
-    if (e.key === "ArrowLeft")  go(-1);
-    if (e.key === "ArrowRight") go(1);
-  });
+  function renderSubjects(cls) {
+    const box = screen.querySelector("#subjects");
+    const bands = bandFor(cls);
+    if (!bands.length) {
+      box.innerHTML = `<p class="chips-empty">Choose a class and the subjects will appear.</p>`;
+      return;
+    }
+    box.innerHTML = bands.map(b => `
+      <div style="width:100%;display:flex;flex-direction:column;gap:7px;margin-bottom:4px">
+        ${bands.length > 1 ? `<p class="boards">${b.tag}</p>` : ""}
+        <div style="display:flex;flex-wrap:wrap;gap:7px">
+          ${b.subjects.map(s => `<button type="button" class="chip" aria-pressed="false">${s}</button>`).join("")}
+        </div>
+      </div>`).join("");
 
-  // ---- form behaviour, including the state this ticket exists to judge ----
-
-  function wireForm() {
-    const form = screen.querySelector("#enquiry");
-    if (!form) return;
-
-    screen.querySelectorAll("#subjects .chip").forEach(chip => {
+    box.querySelectorAll(".chip").forEach(chip => {
       chip.addEventListener("click", () => {
         chip.setAttribute("aria-pressed", chip.getAttribute("aria-pressed") === "true" ? "false" : "true");
       });
     });
+  }
 
-    screen.querySelectorAll("#modes .mode").forEach(btn => {
-      btn.addEventListener("click", () => {
-        screen.querySelectorAll("#modes .mode").forEach(b => b.setAttribute("aria-pressed", "false"));
-        btn.setAttribute("aria-pressed", "true");
-      });
-    });
+  function wire() {
+    const form = screen.querySelector("#enquiry");
+    const cls  = screen.querySelector("#class_level");
+
+    renderSubjects("");
+    cls.addEventListener("change", () => renderSubjects(cls.value));
 
     screen.querySelectorAll(".langs button").forEach(btn => {
       btn.addEventListener("click", () => {
         const lang = btn.dataset.lang;
-        screen.querySelectorAll(".langs button").forEach(b =>
-          b.setAttribute("aria-pressed", String(b === btn)));
+        screen.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
         screen.querySelector("[data-consent-body]").textContent  = CONSENT[lang];
         screen.querySelector("[data-consent-agree]").textContent = AGREE[lang];
-        screen.querySelector("[data-consent-title]").textContent =
-          lang === "bn" ? "পাঠানোর আগে পড়ে নিন" : "Before you send this";
+        screen.querySelector("[data-consent-title]").textContent = CONSENT_TITLE[lang];
       });
     });
 
@@ -781,17 +626,16 @@
           out.innerHTML = `
             <h3>We couldn't send that just now</h3>
             <p>Our enquiry system isn't answering. Nothing has been lost — send us the same
-               message on WhatsApp instead, or simply call. We answer both.</p>
+               message on WhatsApp instead, or simply call. We answer both, ${BIZ.callHours}.</p>
             <div class="stack">
-              <a class="btn btn-call" style="background:var(--warn-ink)" href="${wa(msg)}"
-                 target="_blank" rel="noopener">Send it on WhatsApp instead</a>
+              <a class="btn btn-call" href="${wa(msg)}" target="_blank" rel="noopener">Send it on WhatsApp instead</a>
               <a class="btn btn-wa" href="${tel}">Call ${BIZ.phoneDisplay}</a>
             </div>`;
         } else {
           out.className = "result ok";
           out.innerHTML = `
             <h3>Thank you, ${name.split(" ")[0]}.</h3>
-            <p>Your enquiry has reached us. We call back the same day, usually within a few hours.</p>
+            <p>Your enquiry has reached us. Jayeeta Ma'am calls back the same day, usually within a few hours.</p>
             <p class="small">In a hurry? <a href="${tel}">Call ${BIZ.phoneDisplay}</a> now.</p>`;
         }
         out.scrollIntoView({ block: "nearest" });
@@ -799,6 +643,7 @@
     });
   }
 
-  paint();
+  screen.innerHTML = page();
+  wire();
 })();
 </script>
