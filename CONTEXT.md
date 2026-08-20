@@ -15,7 +15,7 @@ The in-person, small-batch teaching delivered at the Dum Dum Park premises, cove
 _Avoid_: Coaching class, batch class, institute
 
 **Home Tutor Matching**:
-**Retired 2026-08-20 by the Owner.** The business no longer offers home tutoring in any form, and nothing on the site, in the API, or in the database may reference it. Recorded here only so it is not reintroduced from older material — including the Google Business Profile listing name, which still reads *"Home Tutor & Private Tutor"* and now misdescribes the business.
+**Retired 2026-08-20 by the Owner.** The business no longer offers home tutoring in any form, and nothing on the site, in the API, or in the database may reference it. Recorded here only so it is not reintroduced from older material — including the Google Business Profile listing name, which still reads *"Home Tutor & Private Tutor"* and now misdescribes the business. **That listing name is deliberately not being changed**: editing a profile's primary name risks hard suspension or a ranking collapse, a cost judged higher than the inaccuracy. Do not raise it again.
 _Avoid_: Home tuition, private tutor service, tutor booking, `home_tutor`, "mode"
 
 **Jayeeta Ma'am**:
