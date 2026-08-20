@@ -32,8 +32,8 @@ const { Content: BnBody } = await render(bn);
 >
   <div class="flex flex-wrap items-center justify-between gap-3">
     <h3 id="consent-heading" class="text-base font-semibold text-ink">
-      <span data-consent-title="en">{en.data.title}</span>
-      <span data-consent-title="bn" hidden>{bn.data.title}</span>
+      <span data-consent-title="en" lang="en">{en.data.title}</span>
+      <span data-consent-title="bn" lang="bn" hidden>{bn.data.title}</span>
     </h3>
 
     <div class="flex gap-1 rounded-lg bg-white p-1 text-sm" role="group" aria-label="Notice language">
@@ -58,14 +58,17 @@ const { Content: BnBody } = await render(bn);
 
   <div
     data-consent-body="en"
-    class="prose prose-sm mt-4 max-w-none text-ink-soft [&_p]:mt-3 [&_p:first-child]:mt-0"
+    lang="en"
+    class="mt-4 text-sm leading-relaxed text-ink-soft [&_p]:mt-3 [&_p:first-child]:mt-0"
   >
     <EnBody />
   </div>
+  {/* `lang` so a screen reader switches voice rather than reading Bengali as English. */}
   <div
     data-consent-body="bn"
+    lang="bn"
     hidden
-    class="prose prose-sm mt-4 max-w-none text-ink-soft [&_p]:mt-3 [&_p:first-child]:mt-0"
+    class="mt-4 text-sm leading-relaxed text-ink-soft [&_p]:mt-3 [&_p:first-child]:mt-0"
   >
     <BnBody />
   </div>
@@ -78,8 +81,8 @@ const { Content: BnBody } = await render(bn);
       class="mt-0.5 size-5 shrink-0 rounded border-slate-400 text-brand-600 focus:ring-brand-500"
     />
     <span class="text-sm font-medium text-ink">
-      <span data-consent-agree="en">{en.data.agree}</span>
-      <span data-consent-agree="bn" hidden>{bn.data.agree}</span>
+      <span data-consent-agree="en" lang="en">{en.data.agree}</span>
+      <span data-consent-agree="bn" lang="bn" hidden>{bn.data.agree}</span>
     </span>
   </label>
 
