@@ -398,3 +398,11 @@ Not code. None of these is optional.
 - [ ] Cloudflare DPA accepted in the dashboard, date recorded in §8
 - [ ] Telegram auto-delete timer set and attested, date recorded in §3
 - [ ] Legal opinion on Rule 10 — declaration vs DigiLocker verification
+- [ ] **Enable GitHub Pages and restore the deploy workflow's push trigger**
+
+      `.github/workflows/deploy.yml` is `workflow_dispatch`-only on purpose. The
+      apex DNS already points at Pages and `public/CNAME` claims the apex, so the
+      first successful run puts the site live on the real business domain. That
+      must not happen as a side effect of a push while the gates above are open —
+      in particular the `privacy@` mailbox, since a Grievance Officer address that
+      bounces is worse than naming none.

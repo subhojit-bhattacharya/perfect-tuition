@@ -75,7 +75,14 @@ async function main(): Promise<void> {
   // The stuck-notification alert rides the same nightly run (#7 §5). Without it
   // a revoked token means enquiries pile up unseen, and the failure looks
   // identical to "no enquiries today" — a perfectly normal Tuesday.
-  if (armed) {
+  //
+  // Gated on Telegram being configured, NOT on `armed`. RESTIC_REPOSITORY arms
+  // *backup* alerting; this alert is about notification delivery and has nothing
+  // to do with the drives. Coupling them would leave undelivered enquiries
+  // silently unreported for the whole period after the Telegram wizard has been
+  // run but before the drives are bought — which is exactly the window in which
+  // real enquiries start arriving.
+  if (telegram.configured) {
     await alertStuckNotifications(db, telegram);
   }
 

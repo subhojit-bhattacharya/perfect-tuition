@@ -9,16 +9,28 @@
 # Only the site is deployed. The API runs on the Owner's laptop behind a
 # Cloudflare Tunnel and is never built or shipped from CI.
 
+# ⚠ MANUAL-ONLY UNTIL LAUNCH, DELIBERATELY.
+#
+# The apex DNS already points at GitHub Pages and public/CNAME claims the apex,
+# so the first successful run of this workflow puts the site live on the real
+# business domain — for real parents. Several hard gates in
+# docs/security-measures.md §9 must clear before that is safe, and one of them is
+# the privacy@perfect-tuition.co.in mailbox: publishing a Grievance Officer
+# address that bounces is worse than naming none.
+#
+# So going live is a deliberate act, not a side effect of a push. At launch,
+# after enabling Pages (Settings → Pages → Source: GitHub Actions) and setting
+# the custom domain to the APEX, restore the push trigger:
+#
+#   on:
+#     push:
+#       branches: [main]
+#       paths: ["site/**", "package*.json", ".github/workflows/deploy.yml"]
+#     workflow_dispatch:
+
 name: Deploy site
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "site/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
 permissions:
