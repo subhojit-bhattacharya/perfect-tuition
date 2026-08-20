@@ -292,9 +292,10 @@ how the snapshot is produced.
 
 ### Restore drill — a hard launch gate
 
-**An untested backup is a belief, not a backup.** Restore to a temp directory,
-open the database with the key, confirm the row count, and confirm the file is
-unreadable *without* the key.
+**An untested backup is a belief, not a backup.** Run `npx tsx
+scripts/restore-drill.ts`: it restores the latest snapshot to a temp directory,
+proves the restored database cannot be opened without the key, then opens it with
+the key and reports the row count. It never touches the live database.
 
 - **Once before launch — non-negotiable.**
 - **Every 6 months** thereafter, plus monthly `restic check --read-data-subset`.
@@ -385,7 +386,13 @@ Not code. None of these is optional.
 - [ ] Two USB drives bought and labelled `PT-BACKUP-A` / `PT-BACKUP-B`
 - [ ] Restic password **written on paper, two copies, before `restic init`**
 - [ ] `restic init` on each drive, by hand
-- [ ] **Restore drill run** — and with it, monitoring armed
+- [ ] **Restore drill run** on the real drives — and with it, monitoring armed
+
+      The whole chain was exercised end to end on 2026-08-20 against a throwaway
+      restic repository: sweep → `VACUUM INTO` snapshot → encryption assertions →
+      `restic backup` → `restic forget --prune` → restore → open with the key → row
+      count. It passed. That proves the *code* works; it does not discharge this
+      gate, which is about the actual drives and the paper password.
 - [ ] `privacy@perfect-tuition.co.in` mailbox exists (an address that bounces is
       worse than naming none)
 - [ ] Cloudflare DPA accepted in the dashboard, date recorded in §8

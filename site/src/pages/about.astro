@@ -1,0 +1,94 @@
+---
+/**
+ * Exists only because it carries trust material a parent actually weighs —
+ * founding, who Jayeeta Ma'am is, why small batches, and the approach. Filler
+ * would be worse than no page.
+ */
+import Base from "../layouts/Base.astro";
+import ConversionBlock from "../components/ConversionBlock.astro";
+import { BUSINESS } from "../data/business.ts";
+---
+
+<Base
+  title="About Perfect Tuition — Jayeeta Ma'am, Dum Dum Park"
+  description="Perfect Tuition was founded in Dum Dum Park in 2012 by Jayeeta Bhattacharya. Small-batch ICSE and CBSE coaching for classes 3–12."
+>
+  <div class="mx-auto max-w-3xl px-6 py-12">
+    <h1 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">About Perfect Tuition</h1>
+
+    <p class="mt-6 text-lg leading-relaxed text-ink-soft">
+      Perfect Tuition has taught from the same address in Dum Dum Park since {
+        BUSINESS.foundedLong
+      }. In that time the children who started in class 3 have finished school, and a good number
+      of the parents who ring now were sent by parents who came before them.
+    </p>
+
+    <section class="mt-12">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">{BUSINESS.ownerFamiliar}</h2>
+      <p class="mt-4 leading-relaxed text-ink-soft">
+        {BUSINESS.owner} founded Perfect Tuition and mentors here. She teaches the senior
+        commerce and humanities groups herself, and she is the person who answers the phone when
+        you ring — so the conversation about whether this is the right place for your child
+        happens with the person who will be teaching them.
+      </p>
+      <p class="mt-4 leading-relaxed text-ink-soft">
+        Her approach is unglamorous and it works: know where each child is weak, and go back over
+        it until it is no longer weak. Not every student needs the same thing, and a batch small
+        enough to notice the difference is the whole point.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">Why the batches are small</h2>
+      <p class="mt-4 leading-relaxed text-ink-soft">
+        In a large batch a child who does not understand something has two options: interrupt
+        thirty other students, or stay quiet. Most stay quiet, and the gap compounds — by the
+        time it shows up in a test, three chapters have been built on top of it.
+      </p>
+      <p class="mt-4 leading-relaxed text-ink-soft">
+        A small batch removes that choice. The teacher can see who has followed and who has not
+        without anyone having to put their hand up, and the child gets the second explanation on
+        the day they needed it rather than the week before the exam.
+      </p>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">How we teach</h2>
+      <ul class="mt-4 space-y-4 text-ink-soft">
+        <li class="flex gap-3">
+          <span class="mt-2 size-1.5 shrink-0 rounded-full bg-brand-600" aria-hidden="true"></span>
+          <span>
+            <strong class="font-semibold text-ink">Board-specific from the start.</strong> ICSE and
+            CBSE ask for different things in the same subject, and a child prepared generically is
+            prepared for neither.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 size-1.5 shrink-0 rounded-full bg-brand-600" aria-hidden="true"></span>
+          <span>
+            <strong class="font-semibold text-ink">Writing, not just understanding.</strong> Most
+            marks are lost between knowing the answer and writing it the way the paper wants it.
+          </span>
+        </li>
+        <li class="flex gap-3">
+          <span class="mt-2 size-1.5 shrink-0 rounded-full bg-brand-600" aria-hidden="true"></span>
+          <span>
+            <strong class="font-semibold text-ink">Parents are told the truth.</strong> If a child
+            is not working, you will hear it from us before you hear it from the report card.
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-12 rounded-xl bg-slate-50 p-6">
+      <h2 class="text-lg font-semibold text-ink">Come and see</h2>
+      <p class="mt-2 text-ink-soft">
+        The most useful thing you can do is ring and talk it through — your child's class, board,
+        and which subjects are the problem. It takes five minutes and you will know whether this
+        is the right place.
+      </p>
+    </section>
+  </div>
+
+  <ConversionBlock />
+</Base>

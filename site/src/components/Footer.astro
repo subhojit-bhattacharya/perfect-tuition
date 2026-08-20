@@ -1,0 +1,70 @@
+---
+/**
+ * NAP block, hours, privacy link, OpenStreetMap attribution (#10).
+ *
+ * The address and phone are byte-identical to the Google Business Profile
+ * wherever they appear. `/privacy/` is footer-only — it is not in the main nav.
+ */
+import { BUSINESS } from "../data/business.ts";
+---
+
+<footer class="border-t border-slate-200 bg-slate-50">
+  <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:grid-cols-2 lg:grid-cols-3">
+    <div>
+      <h2 class="text-sm font-semibold text-ink">{BUSINESS.name}</h2>
+      <address class="mt-3 text-sm not-italic leading-relaxed text-ink-soft">
+        {BUSINESS.address.line1}<br />
+        {BUSINESS.address.line2}<br />
+        {BUSINESS.address.line3}<br />
+        {BUSINESS.address.locality}, {BUSINESS.address.region} {BUSINESS.address.postalCode}
+      </address>
+      <p class="mt-3 text-sm">
+        <a href={`tel:${BUSINESS.phoneE164}`} class="font-medium text-brand-600 hover:underline">
+          {BUSINESS.phoneDisplay}
+        </a>
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-ink">Timings</h2>
+      <dl class="mt-3 space-y-1 text-sm text-ink-soft">
+        {
+          BUSINESS.batches.map((b) => (
+            <div class="flex justify-between gap-4">
+              <dt>{b.label}</dt>
+              <dd class="tabular-nums">{b.time}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-3 text-sm text-ink-soft">Batches run {BUSINESS.batchDays}.</p>
+      <p class="mt-1 text-sm text-ink-soft">Calls answered {BUSINESS.callHours}.</p>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-ink">More</h2>
+      <ul class="mt-3 space-y-2 text-sm text-ink-soft">
+        <li><a href="/coaching-centre/" class="hover:text-brand-600">Coaching Centre</a></li>
+        <li><a href="/about/" class="hover:text-brand-600">About</a></li>
+        <li><a href="/contact/" class="hover:text-brand-600">Contact</a></li>
+        <li><a href="/privacy/" class="hover:text-brand-600">Privacy &amp; your rights</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-slate-200">
+    <div
+      class="mx-auto flex max-w-5xl flex-col gap-2 px-6 py-6 text-xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {new Date().getFullYear()} {BUSINESS.name}. Teaching since {BUSINESS.founded}.</p>
+      <p>
+        Map data ©
+        <a
+          href="https://www.openstreetmap.org/copyright"
+          class="underline"
+          rel="noopener">OpenStreetMap contributors</a
+        >
+      </p>
+    </div>
+  </div>
+</footer>

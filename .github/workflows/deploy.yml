@@ -1,0 +1,64 @@
+# Builds the static site and publishes it to GitHub Pages.
+#
+# The repo's Pages custom domain must be set to the APEX (perfect-tuition.co.in),
+# not www — that is what makes GitHub issue the certificate and serve the
+# www -> apex 301 itself. Cloudflare cannot do that redirect here, because
+# Redirect Rules need a proxied record and both host records are deliberately
+# grey-clouded so GitHub can terminate TLS.
+#
+# Only the site is deployed. The API runs on the Owner's laptop behind a
+# Cloudflare Tunnel and is never built or shipped from CI.
+
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The API workspace pulls a native module that CI neither needs nor can
+      # usefully build. The site workspace alone is enough to produce the pages.
+      - run: npm ci --workspace site --include-workspace-root
+
+      - run: npm run build --workspace site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

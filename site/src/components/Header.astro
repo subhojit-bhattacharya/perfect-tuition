@@ -1,0 +1,36 @@
+---
+import { BUSINESS, NAV } from "../data/business.ts";
+---
+
+<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+  <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4" aria-label="Main">
+    <a href="/" class="flex items-baseline gap-2">
+      <span class="text-lg font-bold tracking-tight text-ink">{BUSINESS.name}</span>
+      <span class="hidden text-xs font-medium text-ink-soft sm:inline">
+        Since {BUSINESS.founded}
+      </span>
+    </a>
+
+    <div class="flex items-center gap-6">
+      <ul class="hidden items-center gap-6 text-sm font-medium text-ink-soft md:flex">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="transition hover:text-brand-600">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      {/* On desktop there is no sticky bottom bar, so the header carries the CTA. */}
+      <a
+        href={`tel:${BUSINESS.phoneE164}`}
+        class="hidden rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 md:inline-block"
+      >
+        {BUSINESS.phoneDisplay}
+      </a>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,330 @@
+---
+/**
+ * The Enquiry form — the site's secondary path (#6, #9, #10).
+ *
+ * Two behaviours here are load-bearing and easy to get wrong:
+ *
+ * 1. **The subject chips filter on the class chosen.** Classes 9 and 10 appear
+ *    in both senior groups, and a flat list of 22 subjects reads as a
+ *    contradiction. This was the one structural finding the prototype settled.
+ *
+ * 2. **The failure path treats rejection, non-2xx and timeout as ONE
+ *    indistinguishable state.** See the script below — do not "improve" it by
+ *    branching on the status code.
+ */
+import ConsentNotice from "./ConsentNotice.astro";
+import { API_ENDPOINT, BANDS, BUSINESS, WHATSAPP_NUMBER } from "../data/business.ts";
+
+// Serialised for the client so the chips can filter without a second source of
+// truth for the class/subject mapping.
+const bandData = BANDS.map((b) => ({
+  id: b.id,
+  tag: b.tag,
+  label: b.label,
+  classes: b.classes,
+  subjects: b.subjects,
+}));
+---
+
+<form
+  id="enquiry-form"
+  class="space-y-6"
+  novalidate
+  data-endpoint={API_ENDPOINT}
+  data-wa={WHATSAPP_NUMBER}
+  data-bands={JSON.stringify(bandData)}
+>
+  <div>
+    <label for="parent_name" class="block text-sm font-medium text-ink">Your name</label>
+    <input
+      type="text"
+      id="parent_name"
+      name="parent_name"
+      required
+      maxlength="100"
+      autocomplete="name"
+      class="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3 text-base shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+    />
+    <p data-error="parent_name" class="mt-1 hidden text-sm text-alert-600"></p>
+  </div>
+
+  <div>
+    <label for="phone" class="block text-sm font-medium text-ink">Your phone number</label>
+    <input
+      type="tel"
+      id="phone"
+      name="phone"
+      required
+      inputmode="tel"
+      autocomplete="tel"
+      placeholder="98765 43210"
+      class="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3 text-base shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+    />
+    <p data-error="phone" class="mt-1 hidden text-sm text-alert-600"></p>
+  </div>
+
+  <div>
+    <label for="class_level" class="block text-sm font-medium text-ink">
+      Which class is your child in?
+    </label>
+    <select
+      id="class_level"
+      name="class_level"
+      class="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+    >
+      <option value="">Please choose</option>
+      {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => <option value={n}>Class {n}</option>)}
+    </select>
+  </div>
+
+  <!-- Populated once a class is chosen; a class 9 or 10 child sees both groups. -->
+  <div data-subjects hidden>
+    <span class="block text-sm font-medium text-ink">Which subjects?</span>
+    <div data-subject-groups class="mt-3 space-y-4"></div>
+  </div>
+
+  <div>
+    <label for="message" class="block text-sm font-medium text-ink">
+      Anything else? <span class="font-normal text-ink-soft">(optional)</span>
+    </label>
+    <textarea
+      id="message"
+      name="message"
+      rows="4"
+      maxlength="2000"
+      class="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3 text-base shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+    ></textarea>
+    <!--
+      A UI hint only. There is deliberately no server-side scanning: scanning
+      would process exactly the data we are trying not to hold, and would
+      false-positive constantly on names shared between parent and child.
+    -->
+    <p class="mt-1 text-sm text-ink-soft">Please do not include your child's name.</p>
+    <p data-error="message" class="mt-1 hidden text-sm text-alert-600"></p>
+  </div>
+
+  <ConsentNotice />
+  <p data-error="consent" class="hidden text-sm text-alert-600"></p>
+
+  {/* Honeypot. Hidden from humans and from assistive technology, never from bots. */}
+  <div class="absolute left-[-9999px]" aria-hidden="true">
+    <label for="website">Leave this field empty</label>
+    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <button
+    type="submit"
+    class="w-full rounded-xl bg-brand-600 px-6 py-4 text-lg font-semibold text-white shadow-sm transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    Send enquiry
+  </button>
+
+  <p class="text-center text-sm text-ink-soft">
+    In a hurry? <a href={`tel:${BUSINESS.phoneE164}`} class="font-semibold text-brand-600">
+      Call {BUSINESS.phoneDisplay}</a
+    > instead — it is faster.
+  </p>
+</form>
+
+<!-- Success -->
+<div
+  data-state="success"
+  hidden
+  class="rounded-xl border border-green-300 bg-green-50 p-6 text-center"
+>
+  <h3 class="text-lg font-semibold text-ink">Thank you — your enquiry has been sent.</h3>
+  <p class="mt-2 text-ink-soft">
+    {BUSINESS.ownerFamiliar} will ring you back. Calls go out {BUSINESS.callHours}.
+  </p>
+</div>
+
+<!--
+  The fallback. Shown for every kind of delivery failure, without distinction.
+  It reaches Jayeeta by a path that does not involve our infrastructure at all.
+-->
+<div data-state="fallback" hidden class="rounded-xl border border-accent-400 bg-amber-50 p-6">
+  <h3 class="text-lg font-semibold text-ink">We could not send that just now</h3>
+  <p class="mt-2 text-ink-soft">
+    Nothing you typed is lost. Send it on WhatsApp instead — your name and number are already
+    filled in — or ring, which is always the fastest way.
+  </p>
+  <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+    <a
+      data-fallback-wa
+      href="#"
+      class="flex flex-1 items-center justify-center rounded-lg bg-green-600 px-6 py-3.5 font-semibold text-white hover:bg-green-700"
+    >
+      Send on WhatsApp
+    </a>
+    <a
+      href={`tel:${BUSINESS.phoneE164}`}
+      class="flex flex-1 items-center justify-center rounded-lg bg-brand-600 px-6 py-3.5 font-semibold text-white hover:bg-brand-700"
+    >
+      Call {BUSINESS.phoneDisplay}
+    </a>
+  </div>
+</div>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#enquiry-form");
+  if (form) {
+    const endpoint = form.dataset.endpoint!;
+    const waNumber = form.dataset.wa!;
+    const bands = JSON.parse(form.dataset.bands!) as {
+      id: string;
+      tag: string;
+      label: string;
+      classes: number[];
+      subjects: string[];
+    }[];
+
+    const successPanel = document.querySelector<HTMLElement>('[data-state="success"]')!;
+    const fallbackPanel = document.querySelector<HTMLElement>('[data-state="fallback"]')!;
+    const fallbackLink = fallbackPanel.querySelector<HTMLAnchorElement>("[data-fallback-wa]")!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    // ---- Subject chips, filtered by the class chosen ----
+    const classField = form.querySelector<HTMLSelectElement>("#class_level")!;
+    const subjectsWrapper = form.querySelector<HTMLElement>("[data-subjects]")!;
+    const groupsHost = form.querySelector<HTMLElement>("[data-subject-groups]")!;
+
+    classField.addEventListener("change", () => {
+      const chosen = Number(classField.value);
+      groupsHost.replaceChildren();
+
+      const matching = bands.filter((b) => b.classes.includes(chosen));
+      if (matching.length === 0) {
+        subjectsWrapper.hidden = true;
+        return;
+      }
+      subjectsWrapper.hidden = false;
+
+      for (const band of matching) {
+        const group = document.createElement("div");
+
+        // Only label the groups when two of them apply — otherwise the heading
+        // is noise. This is what stops the 9-10 overlap reading as a
+        // contradiction.
+        if (matching.length > 1) {
+          const heading = document.createElement("p");
+          heading.className = "text-xs font-semibold uppercase tracking-wide text-ink-soft";
+          heading.textContent = `${band.tag} — ${band.label}`;
+          group.append(heading);
+        }
+
+        const chips = document.createElement("div");
+        chips.className = "mt-2 flex flex-wrap gap-2";
+
+        for (const subject of band.subjects) {
+          const label = document.createElement("label");
+          label.className =
+            "cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm " +
+            "has-checked:border-brand-600 has-checked:bg-brand-50 has-checked:text-brand-700";
+
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.name = "subjects";
+          input.value = subject;
+          input.className = "sr-only";
+
+          label.append(input, document.createTextNode(subject));
+          chips.append(label);
+        }
+
+        group.append(chips);
+        groupsHost.append(group);
+      }
+    });
+
+    // ---- Submission ----
+    const showErrors = (errors: Record<string, string>) => {
+      form.querySelectorAll<HTMLElement>("[data-error]").forEach((el) => {
+        el.hidden = true;
+        el.textContent = "";
+      });
+      for (const [field, text] of Object.entries(errors)) {
+        const el = form.querySelector<HTMLElement>(`[data-error="${field}"]`);
+        if (el) {
+          el.textContent = text;
+          el.hidden = false;
+        }
+      }
+    };
+
+    const revealFallback = (name: string, phone: string) => {
+      // The name and number are carried across so nothing the parent typed is
+      // wasted. The message body is dropped deliberately — a wa.me link with a
+      // 2000-character payload is fragile, and losing it is better than a link
+      // that silently fails to open.
+      const text = `Hello, I would like to ask about tuition for my child at Perfect Tuition.\n\nName: ${name}\nPhone: ${phone}`;
+      fallbackLink.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+      form.hidden = true;
+      fallbackPanel.hidden = false;
+      fallbackPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submit.disabled = true;
+      submit.textContent = "Sending…";
+
+      const data = new FormData(form);
+      const name = String(data.get("parent_name") ?? "");
+      const phone = String(data.get("phone") ?? "");
+
+      const payload = {
+        parent_name: name,
+        phone,
+        class_level: data.get("class_level") ? Number(data.get("class_level")) : null,
+        subjects: data.getAll("subjects").map(String),
+        message: String(data.get("message") ?? ""),
+        consent: data.get("consent") === "on",
+        consent_locale: String(data.get("consent_locale") ?? "en"),
+        website: String(data.get("website") ?? ""),
+      };
+
+      // Four seconds, then give up. A parent staring at a spinner while the
+      // laptop is asleep is a lost enquiry.
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 4000);
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+
+        if (response.status === 400) {
+          const body = (await response.json()) as { errors?: Record<string, string> };
+          showErrors(body.errors ?? {});
+          submit.disabled = false;
+          submit.textContent = "Send enquiry";
+          return;
+        }
+
+        if (!response.ok) throw new Error(`status ${response.status}`);
+
+        form.hidden = true;
+        successPanel.hidden = false;
+        successPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch {
+        // ⚠ DO NOT branch on the status code here.
+        //
+        // Cloudflare returns 502 when the tunnel is up but the API is down, and
+        // typically 530 / error 1033 when the laptop is asleep and the tunnel
+        // has disconnected. Its error pages carry no Access-Control-Allow-Origin
+        // header, so cross-origin the browser blocks them and this catch sees a
+        // rejected promise rather than any readable status at all.
+        //
+        // Rejection, non-2xx and timeout are therefore ONE indistinguishable
+        // failure state. Any code that special-cases 502 is wrong in exactly the
+        // case this fallback exists for.
+        clearTimeout(timeout);
+        revealFallback(name, phone);
+      }
+    });
+  }
+</script>

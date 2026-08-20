@@ -1,0 +1,60 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import StickyCallBar from "../components/StickyCallBar.astro";
+import SchemaOrg from "../components/SchemaOrg.astro";
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+
+// Absolute canonical at the apex. `trailingSlash: 'always'` means this matches
+// what GitHub Pages serves, so no page 301s to itself.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_IN" />
+
+    <SchemaOrg />
+
+    {/*
+      Cloudflare Web Analytics only — cookieless, no per-visitor profile, and it
+      works despite the apex being grey-clouded.
+
+      There are NO third-party trackers anywhere on this site: no ad-tech, no
+      remarketing pixels, no Google Analytics, and no Google Maps embed. s.9(3)
+      bans behavioural monitoring of children and this is a site children visit.
+      That prohibition is flat and non-waivable — do not add one "just for
+      conversions".
+
+      Uncomment once the token is issued; it is not a secret.
+    */}
+    {/* <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+         data-cf-beacon='{"token": "TOKEN"}'></script> */}
+  </head>
+
+  <body class="bg-white text-ink antialiased">
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <StickyCallBar />
+  </body>
+</html>

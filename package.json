@@ -17,6 +17,8 @@
     "setup": "git config core.hooksPath .githooks && echo 'core.hooksPath set to .githooks'"
   },
   "devDependencies": {
+    "@types/pngjs": "^6.0.5",
+    "pngjs": "^7.0.0",
     "tsx": "^4.23.12",
     "typescript": "~5.9.3"
   }

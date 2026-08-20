@@ -23,7 +23,7 @@
 
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, rmSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import {
   assertNoSqliteHeader,
   assertSnapshotEncrypted,
@@ -96,10 +96,21 @@ async function main(): Promise<void> {
   // mountpoint on the root filesystem and "succeed" forever — a backup that
   // exists only as a belief.
   const mount = findMountpoint(repository);
-  try {
-    run("mountpoint", ["-q", mount]);
-  } catch {
-    throw new Error(`${mount} is not a mountpoint. Is the backup drive attached?`);
+
+  if (mount === null) {
+    throw new Error(
+      `Nothing along ${repository} is a mount point. Is the backup drive attached?`,
+    );
+  }
+
+  // The backup drive is never the root filesystem. Without this check an absent
+  // mount walks all the way up to `/`, which *is* a mount point, and the search
+  // above would succeed vacuously — leaving restic free to write a "successful"
+  // backup onto the very disk the backup exists to survive.
+  if (mount === "/") {
+    throw new Error(
+      `${repository} sits on the root filesystem, not a backup drive. Is the drive attached?`,
+    );
   }
 
   // ---- Assertion 2: it is the repository we expect, already initialised ----
@@ -177,13 +188,33 @@ async function main(): Promise<void> {
   }
 }
 
-/** The deepest existing ancestor of the repository path — where the drive mounts. */
-function findMountpoint(repository: string): string {
-  let candidate = repository;
-  while (!existsSync(candidate) && dirname(candidate) !== candidate) {
-    candidate = dirname(candidate);
+/**
+ * The nearest ancestor of the repository path that is an actual mount point.
+ *
+ * It must be an ancestor search, not just a check on the repository directory:
+ * in production RESTIC_REPOSITORY is something like
+ * `/media/subhojit/PT-BACKUP-A/restic`, where the *drive* is the mount point and
+ * the repository is a directory sitting on it. Testing the repository path
+ * itself would fail every single night on a perfectly healthy backup.
+ *
+ * Returns null if nothing along the path is mounted.
+ */
+function findMountpoint(repository: string): string | null {
+  let candidate = resolve(repository);
+
+  while (true) {
+    if (existsSync(candidate)) {
+      try {
+        run("mountpoint", ["-q", candidate]);
+        return candidate;
+      } catch {
+        /* not a mount point — keep walking up */
+      }
+    }
+    const parent = dirname(candidate);
+    if (parent === candidate) return null;
+    candidate = parent;
   }
-  return candidate;
 }
 
 function driveLabel(mount: string): string | null {

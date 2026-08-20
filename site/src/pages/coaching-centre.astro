@@ -1,0 +1,149 @@
+---
+/**
+ * The primary — and only — offering.
+ *
+ * One page with `#junior` and `#senior` anchors, deliberately not two URLs:
+ * per-subject or per-class pages would be substantially similar and
+ * doorway-shaped.
+ *
+ * The bold "classes 9–12 are Commerce stream only" banner the original IA
+ * specified is **gone**. Senior teaching is no longer Commerce-only, so that
+ * qualifying filter is now false. What is genuinely excluded at senior level is
+ * the Science stream and arts outside the humanities list, and the page says so
+ * plainly rather than overstating the restriction.
+ */
+import Base from "../layouts/Base.astro";
+import ConversionBlock from "../components/ConversionBlock.astro";
+import { BANDS, BUSINESS } from "../data/business.ts";
+
+const junior = BANDS.find((b) => b.id === "junior")!;
+const senior = BANDS.filter((b) => b.id !== "junior");
+---
+
+<Base
+  title="Coaching Centre — classes 3–12, ICSE & CBSE | Perfect Tuition"
+  description="Small-batch ICSE and CBSE coaching in Dum Dum Park, Kolkata. Classes 3–8 all subjects; classes 9–10 humanities; classes 9–12 commerce. From ₹500 per subject."
+>
+  <div class="mx-auto max-w-3xl px-6 py-12">
+    <h1 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">Coaching Centre</h1>
+    <p class="mt-4 text-lg text-ink-soft">
+      In-person, small-batch teaching at our Dum Dum Park premises, for ICSE and CBSE students
+      from classes 3 to 12. Taught here since {BUSINESS.foundedLong}.
+    </p>
+
+    <div class="mt-6 flex gap-3 text-sm font-medium">
+      <a href="#junior" class="rounded-lg bg-brand-50 px-4 py-2 text-brand-700 hover:bg-brand-100">
+        Classes 3–8
+      </a>
+      <a href="#senior" class="rounded-lg bg-brand-50 px-4 py-2 text-brand-700 hover:bg-brand-100">
+        Classes 9–12
+      </a>
+    </div>
+
+    <!-- Junior -->
+    <section id="junior" class="mt-14 scroll-mt-24">
+      <div class="flex flex-wrap items-baseline gap-3">
+        <h2 class="text-2xl font-bold tracking-tight text-ink">{junior.label}</h2>
+        <span class="rounded-full bg-accent-400 px-3 py-1 text-xs font-semibold text-ink">
+          {junior.tag}
+        </span>
+      </div>
+      <p class="mt-2 font-medium text-ink-soft">{junior.boards}</p>
+      <p class="mt-1 text-ink-soft">{junior.note}</p>
+
+      <h3 class="mt-6 text-sm font-semibold uppercase tracking-wide text-ink-soft">Subjects</h3>
+      <ul class="mt-3 flex flex-wrap gap-2">
+        {
+          junior.subjects.map((s) => (
+            <li class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-ink">
+              {s}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- Senior -->
+    <section id="senior" class="mt-14 scroll-mt-24">
+      <h2 class="text-2xl font-bold tracking-tight text-ink">Classes 9 – 12</h2>
+      <p class="mt-2 text-ink-soft">
+        Two groups. <strong class="font-semibold text-ink"
+          >A class 9 or 10 student may take either</strong
+        > — tell us the subjects you need and we will place your child in the right batch.
+      </p>
+
+      <div class="mt-8 space-y-8">
+        {
+          senior.map((band) => (
+            <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div class="flex flex-wrap items-baseline gap-3">
+                <h3 class="text-xl font-semibold text-ink">{band.label}</h3>
+                <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+                  {band.tag}
+                </span>
+              </div>
+              <p class="mt-1 font-medium text-ink-soft">{band.boards}</p>
+              <ul class="mt-4 flex flex-wrap gap-2">
+                {band.subjects.map((s) => (
+                  <li class="rounded-lg bg-slate-100 px-3 py-1.5 text-sm text-ink">{s}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <!--
+        A qualifying filter that is true. Stated so a parent whose child needs
+        Physics at class 11 finds out here rather than on the phone — that call
+        costs Jayeeta time and costs the parent their goodwill.
+      -->
+      <div class="mt-6 rounded-xl border-l-4 border-alert-500 bg-red-50 p-5">
+        <p class="text-sm text-ink">
+          <strong class="font-semibold">We do not teach the Science stream at classes 11 and 12.</strong>
+          If your child needs Physics, Chemistry, Biology or Mathematics at that level, we are not
+          the right centre — and we would rather tell you now.
+        </p>
+      </div>
+    </section>
+
+    <!-- Batches and fees -->
+    <section class="mt-14 grid gap-8 sm:grid-cols-2">
+      <div class="rounded-xl bg-slate-50 p-6">
+        <h2 class="text-lg font-semibold text-ink">Batch timings</h2>
+        <dl class="mt-4 space-y-2 text-sm">
+          {
+            BUSINESS.batches.map((b) => (
+              <div class="flex justify-between gap-4 border-b border-slate-200 pb-2">
+                <dt class="text-ink-soft">{b.label}</dt>
+                <dd class="font-medium tabular-nums text-ink">{b.time}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="mt-3 text-sm text-ink-soft">{BUSINESS.batchDays}.</p>
+      </div>
+
+      <div class="rounded-xl bg-slate-50 p-6">
+        <h2 class="text-lg font-semibold text-ink">Fees</h2>
+        <p class="mt-4 text-2xl font-bold text-ink">{BUSINESS.fee}</p>
+        <p class="mt-2 text-sm text-ink-soft">
+          A band rather than a price list, because the figure depends on the class and how many
+          subjects your child takes. Ring and you will get the exact number.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12 rounded-xl border border-slate-200 p-6">
+      <h2 class="text-lg font-semibold text-ink">Small batches</h2>
+      <p class="mt-2 text-ink-soft">
+        Batches are kept small deliberately. It is the difference between a child who can ask a
+        question when they are lost and one who copies the board and hopes. {
+          BUSINESS.ownerFamiliar
+        } knows every student in a batch by name and by where they struggle.
+      </p>
+    </section>
+  </div>
+
+  <ConversionBlock />
+</Base>

@@ -1,0 +1,115 @@
+---
+/**
+ * The standalone Consent Notice, rendered at the form (#6, #10).
+ *
+ * A link to `/privacy/` does not satisfy Rule 3(a), so the notice is on the page
+ * in full. Both languages are present in the DOM and toggled client-side, and
+ * the language actually shown is submitted with the enquiry and stored in the
+ * Consent Record — the burden of proving what a parent agreed to falls on us.
+ *
+ * ⚠ The Bengali text carries a hard launch gate: Jayeeta must read and sign off
+ * on it. Under DPDP s.5(3) the notice has legal effect, and a mistranslated
+ * purpose statement arguably means the consent obtained through it is not valid
+ * consent at all.
+ */
+import { getCollection, render } from "astro:content";
+
+const all = await getCollection("consent");
+const version = Math.max(...all.map((e) => e.data.version));
+const current = all.filter((e) => e.data.version === version);
+
+const en = current.find((e) => e.data.locale === "en")!;
+const bn = current.find((e) => e.data.locale === "bn")!;
+
+const { Content: EnBody } = await render(en);
+const { Content: BnBody } = await render(bn);
+---
+
+<section
+  class="rounded-xl border border-slate-300 bg-slate-50 p-5"
+  aria-labelledby="consent-heading"
+  data-consent-version={version}
+>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h3 id="consent-heading" class="text-base font-semibold text-ink">
+      <span data-consent-title="en">{en.data.title}</span>
+      <span data-consent-title="bn" hidden>{bn.data.title}</span>
+    </h3>
+
+    <div class="flex gap-1 rounded-lg bg-white p-1 text-sm" role="group" aria-label="Notice language">
+      <button
+        type="button"
+        data-lang-btn="en"
+        aria-pressed="true"
+        class="rounded-md px-3 py-1 font-medium aria-pressed:bg-brand-600 aria-pressed:text-white"
+      >
+        English
+      </button>
+      <button
+        type="button"
+        data-lang-btn="bn"
+        aria-pressed="false"
+        class="rounded-md px-3 py-1 font-medium aria-pressed:bg-brand-600 aria-pressed:text-white"
+      >
+        বাংলা
+      </button>
+    </div>
+  </div>
+
+  <div
+    data-consent-body="en"
+    class="prose prose-sm mt-4 max-w-none text-ink-soft [&_p]:mt-3 [&_p:first-child]:mt-0"
+  >
+    <EnBody />
+  </div>
+  <div
+    data-consent-body="bn"
+    hidden
+    class="prose prose-sm mt-4 max-w-none text-ink-soft [&_p]:mt-3 [&_p:first-child]:mt-0"
+  >
+    <BnBody />
+  </div>
+
+  <label class="mt-5 flex cursor-pointer items-start gap-3 rounded-lg bg-white p-4">
+    <input
+      type="checkbox"
+      name="consent"
+      required
+      class="mt-0.5 size-5 shrink-0 rounded border-slate-400 text-brand-600 focus:ring-brand-500"
+    />
+    <span class="text-sm font-medium text-ink">
+      <span data-consent-agree="en">{en.data.agree}</span>
+      <span data-consent-agree="bn" hidden>{bn.data.agree}</span>
+    </span>
+  </label>
+
+  <!-- Recorded with the Enquiry so the Consent Record names the language shown. -->
+  <input type="hidden" name="consent_locale" value="en" data-consent-locale />
+</section>
+
+<script>
+  // Toggling the notice language also switches the value stored in the Consent
+  // Record, so the row always names the text the parent actually read.
+  const root = document.querySelector<HTMLElement>("[data-consent-version]");
+  if (root) {
+    const localeField = root.querySelector<HTMLInputElement>("[data-consent-locale]");
+
+    root.querySelectorAll<HTMLButtonElement>("[data-lang-btn]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const lang = button.dataset.langBtn!;
+
+        root.querySelectorAll<HTMLElement>("[data-lang-btn]").forEach((b) => {
+          b.setAttribute("aria-pressed", String(b.dataset.langBtn === lang));
+        });
+
+        for (const attr of ["data-consent-title", "data-consent-body", "data-consent-agree"]) {
+          root.querySelectorAll<HTMLElement>(`[${attr}]`).forEach((el) => {
+            el.hidden = el.getAttribute(attr) !== lang;
+          });
+        }
+
+        if (localeField) localeField.value = lang;
+      });
+    });
+  }
+</script>

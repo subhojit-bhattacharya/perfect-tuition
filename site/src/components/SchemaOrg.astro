@@ -1,0 +1,122 @@
+---
+/**
+ * One JSON-LD node, co-typed LocalBusiness + EducationalOrganization.
+ *
+ * `LocalBusiness` sits under both `Organization` and `Place`, so co-typing them
+ * in a `@type` array is coherent — both branches resolve to Organization + Place
+ * — and is valid JSON-LD.
+ *
+ * There is deliberately **no `review` or `aggregateRating` markup, by any
+ * route**. Reviewer copyright, the Maps Platform terms, and Search Central's
+ * self-serving-review rule each independently close it off, and marking up a
+ * rating we cannot substantiate turns a rich-result ineligibility problem into a
+ * manual-action one.
+ *
+ * The Home Tutor Matching offer that the SEO research drafted is gone: the
+ * offering was retired on 2026-08-20 and nothing may reference it.
+ */
+import { BUSINESS } from "../data/business.ts";
+
+const site = "https://perfect-tuition.co.in";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${site}/#website`,
+      url: `${site}/`,
+      name: BUSINESS.name,
+      alternateName: BUSINESS.legalListingName,
+      inLanguage: "en-IN",
+      publisher: { "@id": `${site}/#business` },
+    },
+    {
+      "@type": ["LocalBusiness", "EducationalOrganization"],
+      "@id": `${site}/#business`,
+      name: BUSINESS.name,
+      alternateName: BUSINESS.legalListingName,
+      description:
+        "Coaching centre in Dum Dum Park, Kolkata, teaching ICSE and CBSE students from " +
+        "classes 3 to 12 in small batches. Established 2012.",
+      url: `${site}/`,
+      telephone: BUSINESS.phoneSchema,
+      foundingDate: String(BUSINESS.founded),
+      founder: { "@type": "Person", name: BUSINESS.owner },
+      priceRange: "₹₹",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: `${BUSINESS.address.line1}, ${BUSINESS.address.line2}, ${BUSINESS.address.line3}`,
+        addressLocality: BUSINESS.address.locality,
+        addressRegion: BUSINESS.address.region,
+        postalCode: BUSINESS.address.postalCode,
+        addressCountry: BUSINESS.address.country,
+      },
+      // Seven decimal places, read off the profile pin. Approximate coordinates
+      // are the one number that should not be invented for a distance-ranked
+      // local result.
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: BUSINESS.geo.latitude,
+        longitude: BUSINESS.geo.longitude,
+      },
+      areaServed: { "@type": "City", name: "Kolkata" },
+      // These are the hours the phone is answered, which is what the site
+      // publishes. The Google Business Profile still says 8am–10pm daily and is
+      // the record that should move.
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          opens: BUSINESS.callHoursSchema.opens,
+          closes: BUSINESS.callHoursSchema.closes,
+        },
+      ],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Tuition offerings",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Coaching Centre — Junior Classes (3–8)",
+              serviceType: "Tuition",
+              description:
+                "Small-batch teaching at the Dum Dum Park premises for classes 3 to 8 across " +
+                "ICSE, CBSE, KV and WB boards, covering all subjects.",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Coaching Centre — Humanities (9–10)",
+              serviceType: "Tuition",
+              description:
+                "Small-batch ICSE and CBSE teaching for classes 9 and 10 in English, History, " +
+                "Civics, Geography, Social Science and Political Science.",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Coaching Centre — Commerce (9–12)",
+              serviceType: "Tuition",
+              description:
+                "Small-batch ICSE and CBSE teaching for classes 9 to 12 in Commerce, Economics, " +
+                "Accountancy, Business Studies, Economic Application and Entrepreneurship.",
+            },
+          },
+        ],
+      },
+      // Left empty rather than guessed: a wrong sameAs actively misidentifies
+      // the entity.
+      sameAs: [],
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

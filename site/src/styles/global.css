@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/*
+ * Palette: blue, black, yellow, red (Owner's direction, 2026-08-20).
+ *
+ * Declared as Tailwind theme tokens so every component styles itself with plain
+ * utility classes. There is deliberately no bespoke component CSS here — the
+ * prototype's hand-written styling was explicitly rejected and does not carry
+ * forward; only its structure and copy do.
+ */
+@theme {
+  --color-brand-50: oklch(0.97 0.02 250);
+  --color-brand-100: oklch(0.93 0.04 250);
+  --color-brand-200: oklch(0.86 0.08 250);
+  --color-brand-500: oklch(0.58 0.19 253);
+  --color-brand-600: oklch(0.51 0.2 253);
+  --color-brand-700: oklch(0.44 0.18 253);
+  --color-brand-900: oklch(0.29 0.11 253);
+
+  --color-accent-400: oklch(0.86 0.16 88);
+  --color-accent-500: oklch(0.8 0.17 82);
+
+  --color-alert-500: oklch(0.58 0.22 27);
+  --color-alert-600: oklch(0.51 0.21 27);
+
+  --color-ink: oklch(0.18 0.01 260);
+  --color-ink-soft: oklch(0.44 0.01 260);
+}
+
+/*
+ * The sticky Call/WhatsApp bar is fixed to the bottom on small screens, so the
+ * page needs room underneath it or the footer's last line sits behind the bar.
+ */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 4.5rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* The anchor targets on /coaching-centre/ must not land under the sticky header. */
+:target {
+  scroll-margin-top: 5rem;
+}
