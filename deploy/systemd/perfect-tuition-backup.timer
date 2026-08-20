@@ -1,0 +1,12 @@
+[Unit]
+Description=Nightly Perfect Tuition retention sweep and backup
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+# The laptop sleeps. Without this a missed night is simply never made up, and
+# deferred erasure requests would sit unhonoured.
+Persistent=true
+RandomizedDelaySec=600
+
+[Install]
+WantedBy=timers.target

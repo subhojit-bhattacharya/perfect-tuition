@@ -1,0 +1,25 @@
+# Metadata-only API logs, retained 12 months (#8 §9).
+#
+# Twelve monthly files, then delete. Not thirteen, not indefinite: an unbounded
+# log directory quietly becomes the one dataset with no retention policy at all.
+#
+# Rule 6(1)(e) and Rule 8(3) both want a year of logs; #6 forbids logging names,
+# phone numbers or messages. Those coexist, with an honest consequence recorded
+# in docs/security-measures.md: these logs cannot tell you *which* enquiry was
+# accessed in a breach, only that an endpoint was hit.
+#
+# Install:
+#   sudo cp deploy/logrotate/perfect-tuition /etc/logrotate.d/perfect-tuition
+#   sudo logrotate -d /etc/logrotate.d/perfect-tuition   # dry run
+
+/datascience/Websites/perfect-tuition/api/logs/*.log {
+    monthly
+    rotate 12
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+    su subhojit subhojit
+    create 0640 subhojit subhojit
+}

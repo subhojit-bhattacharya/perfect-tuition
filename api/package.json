@@ -1,0 +1,22 @@
+{
+  "name": "@perfect-tuition/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.1",
+    "better-sqlite3-multiple-ciphers": "^13.0.3",
+    "dotenv": "^17.2.4",
+    "hono": "^4.13.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.2",
+    "vitest": "^4.1.11"
+  }
+}

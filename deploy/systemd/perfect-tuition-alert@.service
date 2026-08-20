@@ -1,0 +1,11 @@
+# OnFailure= handler. Instanced with the failing unit's name, which is all it
+# reports — metadata only, never anything the failed job was handling.
+
+[Unit]
+Description=Report %i failure to the Operator's Telegram channel
+
+[Service]
+Type=oneshot
+User=subhojit
+WorkingDirectory=/datascience/Websites/perfect-tuition
+ExecStart=/usr/bin/npx tsx scripts/alert-failure.ts %i

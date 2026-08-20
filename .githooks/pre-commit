@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# Refuses to commit personal data or secrets to what is a PUBLIC repository (#8 §11).
+#
+# `.gitignore` is empirically verified, but `git add -f` bypasses it entirely,
+# and a hook written into `.git/hooks` is not version-controlled — it vanishes on
+# any fresh clone and protects exactly one working copy. This file is committed
+# and wired via `core.hooksPath`, so it survives cloning.
+#
+# Install with:  npm run setup     (or: git config core.hooksPath .githooks)
+#
+# It HARD-FAILS rather than warning. A warning in a terminal at 1am is not a
+# control, and a leak here is unrecoverable: once GitHub has the blob, a
+# `git push --force` does not undo it and it is a reportable breach.
+
+set -euo pipefail
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+blocked=""
+
+while IFS= read -r path; do
+    [ -z "$path" ] && continue
+
+    case "$path" in
+        # The Enquiry store and anything staged beside it.
+        api/data/*)
+            blocked="${blocked}  ${path}  — the Enquiry store holds parents' personal data\n" ;;
+
+        # Any database, wherever it was put.
+        *.db|*.db-wal|*.db-shm|*.sqlite|*.sqlite3|*.sqlite-wal|*.sqlite-shm)
+            blocked="${blocked}  ${path}  — database file\n" ;;
+
+        # The Takeout export: real business data, git-ignored by design.
+        v0_GMB/*)
+            blocked="${blocked}  ${path}  — Takeout export, contains real business data\n" ;;
+
+        # Every .env except the template.
+        .env.example)
+            ;;
+        .env|.env.*|*/.env|*/.env.*)
+            blocked="${blocked}  ${path}  — holds the SQLCipher key, restic password and bot token\n" ;;
+
+        # The metadata-only logs are still not repository content.
+        api/logs/*)
+            blocked="${blocked}  ${path}  — runtime log\n" ;;
+    esac
+done <<< "$staged"
+
+if [ -n "$blocked" ]; then
+    printf '\n\033[1;31mCOMMIT REFUSED\033[0m — these paths must never enter a public repository:\n\n'
+    printf "$blocked"
+    printf '\nThis repository is public. If any of this reaches GitHub it is a reportable\n'
+    printf 'breach under Rule 7 — see docs/incident-runbook.md. A force-push does not undo it.\n\n'
+    printf 'Unstage them with:  git restore --staged <path>\n\n'
+    exit 1
+fi

@@ -1,0 +1,32 @@
+# The Enquiry API. Listens on 127.0.0.1 only — the Cloudflare Tunnel is the sole
+# ingress, so binding wider would expose it on any network the laptop joins.
+#
+# Install:
+#   sudo cp deploy/systemd/*.service deploy/systemd/*.timer /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now perfect-tuition-api.service
+
+[Unit]
+Description=Perfect Tuition Enquiry API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=subhojit
+WorkingDirectory=/datascience/Websites/perfect-tuition
+ExecStart=/usr/bin/npm --prefix api run start
+Restart=always
+RestartSec=5
+
+# The service reads .env itself; systemd must not need to see the secrets.
+Environment=NODE_ENV=production
+
+# It needs exactly one writable path outside its own tree.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=false
+
+[Install]
+WantedBy=multi-user.target

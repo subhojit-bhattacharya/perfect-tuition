@@ -1,0 +1,18 @@
+# The nightly job: retention sweep FIRST, then snapshot and back up (#8 section 8).
+#
+# The ordering lives inside scripts/backup.ts and is load-bearing — sweeping
+# after the backup would let each snapshot re-capture rows deleted that morning,
+# making the 90-day prune window their real retention period.
+
+[Unit]
+Description=Perfect Tuition nightly retention sweep and backup
+# Reports its own failure to the Operator's Telegram channel. Without this the
+# backup erroring is completely silent.
+OnFailure=perfect-tuition-alert@%n.service
+
+[Service]
+Type=oneshot
+User=subhojit
+WorkingDirectory=/datascience/Websites/perfect-tuition
+ExecStart=/usr/bin/npm run backup
+TimeoutStartSec=3600

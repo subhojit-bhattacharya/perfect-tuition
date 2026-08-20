@@ -1,0 +1,13 @@
+# The weekly all-green heartbeat (#7 section 6). Weekly rather than daily on
+# purpose: a message received every morning and never acted on becomes invisible
+# within a fortnight, and then its absence signals nothing.
+
+[Unit]
+Description=Perfect Tuition weekly heartbeat
+OnFailure=perfect-tuition-alert@%n.service
+
+[Service]
+Type=oneshot
+User=subhojit
+WorkingDirectory=/datascience/Websites/perfect-tuition
+ExecStart=/usr/bin/npx tsx scripts/heartbeat.ts

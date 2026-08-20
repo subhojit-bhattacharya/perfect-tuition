@@ -25,3 +25,11 @@ api/data/
 node_modules/
 dist/
 .astro/
+
+# --- Node ---
+node_modules/
+dist/
+.astro/
+
+# Runtime logs — metadata-only, but not repository content (#8 §9).
+api/logs/
