@@ -1,6 +1,8 @@
 -- Perfect Tuition — Enquiry store.
 --
--- Decided in #6 (API contract) and amended by #8 (retention, backup, access).
+-- Decided in #6 (API contract), amended by #8 (retention, backup, access),
+-- #7 (notification state), and by the Owner's 2026-08-20 direction retiring the
+-- Home Tutor Matching offering, which removed the `mode` column entirely.
 -- The database is encrypted at rest with SQLCipher; `PRAGMA key` must be the
 -- first statement on every connection, before this file is applied.
 
@@ -10,6 +12,11 @@ PRAGMA foreign_keys = ON;
 -- An inbound Enquiry from a Prospective Parent, with its Consent Record
 -- denormalised alongside it. Validation is lenient by policy (#6): any
 -- class/subject pairing is accepted, including ones we do not teach.
+--
+-- No `mode` column: Perfect Tuition is 100% a coaching centre, so there is
+-- nothing to choose between. Every Enquiry is for teaching at the Dum Dum Park
+-- premises. Duplicate suppression (#6) consequently keys on `phone_e164` alone
+-- rather than the phone/mode pair.
 CREATE TABLE IF NOT EXISTS enquiry (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at    TEXT    NOT NULL,                  -- ISO-8601 UTC; the retention clock
@@ -18,7 +25,6 @@ CREATE TABLE IF NOT EXISTS enquiry (
   phone_raw     TEXT    NOT NULL,                  -- exactly what they typed
   class_level   INTEGER,                           -- nullable, lenient
   subjects      TEXT    NOT NULL DEFAULT '[]',     -- JSON array
-  mode          TEXT    NOT NULL,                  -- coaching_centre | home_tutor
   message       TEXT,
 
   -- Consent Record. The burden of proving consent falls on the business.
@@ -57,7 +63,7 @@ CREATE TABLE IF NOT EXISTS enquiry (
 CREATE INDEX IF NOT EXISTS enquiry_created_at_idx
   ON enquiry (created_at);
 
--- Duplicate suppression (#6) and erasure lookup by phone (#8).
+-- Duplicate suppression (#6, now keyed on phone alone) and erasure lookup (#8).
 CREATE INDEX IF NOT EXISTS enquiry_phone_created_idx
   ON enquiry (phone_e164, created_at);
 
